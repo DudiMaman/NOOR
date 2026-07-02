@@ -75,7 +75,7 @@ export function ProfileScreen() {
       <View style={[styles.heroCard, shadows.heroCard]}>
         <View style={styles.avatar}>
           <AppText amiri size={30} color={colors.gold300}>
-            {(profile?.name || 'ض')[0]}
+            {(profile?.name || t('home.guest'))[0]}
           </AppText>
         </View>
         <View style={styles.heroInfo}>
@@ -148,7 +148,10 @@ export function ProfileScreen() {
       {profile?.isGuest && (
         <PrimaryButton
           label={t('profile.createAccount')}
-          onPress={() => navigation.reset({ index: 0, routes: [{ name: 'AuthSignUp' as never }] })}
+          onPress={() => {
+            setFlowStage('auth');
+            navigation.reset({ index: 0, routes: [{ name: 'AuthSignUp' as never }] });
+          }}
           style={styles.createAccount}
         />
       )}

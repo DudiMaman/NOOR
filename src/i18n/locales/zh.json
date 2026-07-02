@@ -182,7 +182,8 @@
     "searchPlaceholder": "搜索城市…",
     "confirm": "确认位置",
     "permissionDenied": "我们无法访问您的位置——请从列表中选择一个城市。",
-    "locating": "正在定位…"
+    "locating": "正在定位…",
+    "myLocation": "我的位置"
   },
   "home": {
     "greeting": "安拉保佑您",
@@ -232,7 +233,8 @@
     "verseN": "第 {{n}} 节经文",
     "surahList": "苏拉",
     "continueReading": "继续阅读",
-    "fontSize": "字体大小"
+    "fontSize": "字体大小",
+    "surahTitle": "{{name}}章"
   },
   "customs": {
     "title": "特殊时期与圣行",
@@ -354,7 +356,9 @@
     "completed": "赞念完成——求真主接纳",
     "progress": "{{done}} / {{total}}",
     "howToPray": "如何礼拜",
-    "rakaat": "{{count}} 拜"
+    "rakaat": "{{count}} 拜",
+    "sunnahBefore": "礼前圣行",
+    "sunnahAfter": "礼后圣行"
   },
   "notificationsContent": {
     "adhkarMorningTitle": "晨间赞念",
@@ -391,7 +395,33 @@
     "friday": "周五",
     "saturday": "周六"
   },
-  "gregorianMonths": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-  "hijriMonths": ["穆哈兰月", "萨法尔月", "赖比尔·敖瓦鲁月", "赖比尔·赛尼月", "朱玛达·敖瓦鲁月", "朱玛达·赛尼月", "赖哲卜月", "舍尔邦月", "莱麦丹月", "绍瓦鲁月", "都·卡尔迪亚月", "都·海吉亚月"],
+  "gregorianMonths": [
+    "一月",
+    "二月",
+    "三月",
+    "四月",
+    "五月",
+    "六月",
+    "七月",
+    "八月",
+    "九月",
+    "十月",
+    "十一月",
+    "十二月"
+  ],
+  "hijriMonths": [
+    "穆哈兰月",
+    "萨法尔月",
+    "赖比尔·敖瓦鲁月",
+    "赖比尔·赛尼月",
+    "朱玛达·敖瓦鲁月",
+    "朱玛达·赛尼月",
+    "赖哲卜月",
+    "舍尔邦月",
+    "莱麦丹月",
+    "绍瓦鲁月",
+    "都·卡尔迪亚月",
+    "都·海吉亚月"
+  ],
   "hijriSuffix": "伊历"
 }

@@ -114,7 +114,8 @@ export function SettingsScreen() {
       ? t('settings.trialEndsOn', { date: formatShortDate(trialEndsAt) })
       : entitled && renewsAt
         ? t('settings.renewsOn', {
-            plan: plan === 'yearly' ? t('settings.yearlyPlan') : t('settings.monthlyPlan'),
+            // short plan word per the design ("سنوي · يتجدد 2.7.2027")
+            plan: plan === 'yearly' ? t('paywall.yearly') : t('paywall.monthly'),
             date: formatShortDate(renewsAt),
           })
         : t('settings.upgrade');
@@ -149,7 +150,7 @@ export function SettingsScreen() {
       >
         <View style={styles.avatar}>
           <AppText amiri size={26} color={colors.gold300}>
-            {(profile?.name || 'ض')[0]}
+            {(profile?.name || t('home.guest'))[0]}
           </AppText>
         </View>
         <View style={styles.profileInfo}>
@@ -240,7 +241,7 @@ export function SettingsScreen() {
               { value: 'auto', label: t('settings.auto') },
             ]}
             value={appearance}
-            onChange={setAppearance}
+            onChange={(value) => gate(() => setAppearance(value))}
           />
         </View>
       </ListCard>

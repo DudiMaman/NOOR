@@ -63,6 +63,7 @@ export function QuizLayout({
         onPress={onContinue}
         disabled={ctaDisabled}
         height={54}
+        labelWeight="semibold"
         style={styles.cta}
       />
     </View>

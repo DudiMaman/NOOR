@@ -182,7 +182,8 @@
     "searchPlaceholder": "도시 검색…",
     "confirm": "위치 확인",
     "permissionDenied": "위치에 접근할 수 없어요—목록에서 도시를 선택해주세요.",
-    "locating": "위치 찾는 중…"
+    "locating": "위치 찾는 중…",
+    "myLocation": "내 위치"
   },
   "home": {
     "greeting": "알-쌀라무 알라이쿰",
@@ -232,7 +233,8 @@
     "verseN": "{{n}}절",
     "surahList": "수라 목록",
     "continueReading": "읽기 계속",
-    "fontSize": "글씨 크기"
+    "fontSize": "글씨 크기",
+    "surahTitle": "수라 {{name}}"
   },
   "customs": {
     "title": "기념일과 순나",
@@ -354,7 +356,9 @@
     "completed": "와르드 완료—알라께서 받으시기를",
     "progress": "{{done}} / {{total}}",
     "howToPray": "기도하는 방법",
-    "rakaat": "{{count}}랙아트"
+    "rakaat": "{{count}}랙아트",
+    "sunnahBefore": "예배 전 순나",
+    "sunnahAfter": "예배 후 순나"
   },
   "notificationsContent": {
     "adhkarMorningTitle": "아침 지크르",
@@ -391,7 +395,33 @@
     "friday": "금요일",
     "saturday": "토요일"
   },
-  "gregorianMonths": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-  "hijriMonths": ["무하람", "사파르", "라비 알아왈", "라비 알싸니", "주마다 알울라", "주마다 알아키라", "라잡", "샤아반", "라마단", "샤왈", "두 알까아다", "두 알히자"],
+  "gregorianMonths": [
+    "1월",
+    "2월",
+    "3월",
+    "4월",
+    "5월",
+    "6월",
+    "7월",
+    "8월",
+    "9월",
+    "10월",
+    "11월",
+    "12월"
+  ],
+  "hijriMonths": [
+    "무하람",
+    "사파르",
+    "라비 알아왈",
+    "라비 알싸니",
+    "주마다 알울라",
+    "주마다 알아키라",
+    "라잡",
+    "샤아반",
+    "라마단",
+    "샤왈",
+    "두 알까아다",
+    "두 알히자"
+  ],
   "hijriSuffix": "히즈라력"
 }

@@ -4,24 +4,42 @@ import { Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 import { AppText } from './AppText';
 import { colors } from '../theme';
 
-/** iOS-style toggle — 50×30 track, 25px white knob (design spec). */
+/**
+ * iOS-style toggle — 50×30 track with 25px white knob by default (design 1p);
+ * prayer rows use the compact 44×27 variant (design 1m).
+ */
 export function IOSToggle({
   value,
   onValueChange,
   goldWhenOn = false,
+  width = 50,
+  height = 30,
 }: {
   value: boolean;
   onValueChange: (value: boolean) => void;
   goldWhenOn?: boolean;
+  width?: number;
+  height?: number;
 }) {
   const onColor = goldWhenOn ? 'rgba(196,164,95,0.9)' : colors.emerald800;
+  const knob = height - 5;
   return (
     <Pressable
       onPress={() => onValueChange(!value)}
       hitSlop={8}
-      style={[styles.track, { backgroundColor: value ? onColor : colors.trackOff }]}
+      style={[
+        styles.track,
+        { width, height, borderRadius: height / 2 },
+        { backgroundColor: value ? onColor : colors.trackOff },
+      ]}
     >
-      <View style={[styles.knob, value ? styles.knobOn : styles.knobOff]} />
+      <View
+        style={[
+          styles.knob,
+          { width: knob, height: knob, borderRadius: knob / 2 },
+          value ? styles.knobOn : styles.knobOff,
+        ]}
+      />
     </Pressable>
   );
 }

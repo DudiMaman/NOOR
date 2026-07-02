@@ -103,10 +103,12 @@ export function HomeScreen() {
           </View>
         </View>
 
-        {/* Row 2 — dual hijri/gregorian date */}
-        <AppText size={13} color={colors.onDarkFaint} style={styles.dateLine}>
-          {formatDualDate(now, t)}
-        </AppText>
+        {/* Row 2 — dual hijri/gregorian date → Islamic occasions */}
+        <Pressable onPress={() => gate(() => navigation.navigate('CustomsHolidays' as never))}>
+          <AppText size={13} color={colors.onDarkFaint} style={styles.dateLine}>
+            {formatDualDate(now, t)}
+          </AppText>
+        </Pressable>
 
         {/* Row 3 — next prayer + day arc */}
         <View style={styles.nextRow}>
@@ -224,7 +226,7 @@ export function HomeScreen() {
               {t('home.weeklyReading')}
             </AppText>
             <AppText weight="bold" size={15.5} color={colors.ink} style={styles.weeklyTitle}>
-              {`سورة ${kahfName}`}
+              {t('quran.surahTitle', { name: kahfName })}
             </AppText>
             <ProgressBar
               progress={weeklyProgress}

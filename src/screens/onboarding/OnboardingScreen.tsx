@@ -54,7 +54,15 @@ export function OnboardingScreen() {
 
       {/* skip */}
       <View style={[styles.skip, { top: insets.top + 14 }]}>
-        <GlassChip softBorder label={t('common.skip')} onPress={finish} style={styles.skipChip} />
+        <GlassChip
+          softBorder
+          label={t('common.skip')}
+          labelSize={13.5}
+          labelWeight="medium"
+          labelColor="rgba(245,238,220,0.85)"
+          onPress={finish}
+          style={styles.skipChip}
+        />
       </View>
 
       {/* bottom sheet */}

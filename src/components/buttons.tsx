@@ -15,6 +15,8 @@ interface CtaProps {
   /** ambient shimmer sweep across the button */
   shimmer?: boolean;
   height?: number;
+  /** design: quiz/location CTAs are 600, onboarding sheet CTA is 700 */
+  labelWeight?: 'semibold' | 'bold';
   style?: ViewStyle;
 }
 
@@ -26,6 +28,7 @@ export function PrimaryButton({
   withArrow,
   shimmer,
   height = 54,
+  labelWeight = 'bold',
   style,
 }: CtaProps) {
   return (
@@ -46,7 +49,7 @@ export function PrimaryButton({
       ]}
     >
       {shimmer && <Shimmer light />}
-      <AppText weight="bold" size={17} color={colors.creamText} style={styles.label}>
+      <AppText weight={labelWeight} size={17} color={colors.creamText} style={styles.label}>
         {label}
       </AppText>
       {withArrow && (

@@ -61,7 +61,11 @@ export function SubscriptionPaywallScreen() {
       {/* Close */}
       <Pressable
         onPress={() => navigation.goBack()}
-        style={({ pressed }) => [styles.close, pressed && { opacity: 0.7 }]}
+        style={({ pressed }) => [
+          styles.close,
+          { top: insets.top + 10, left: 22 },
+          pressed && { opacity: 0.7 },
+        ]}
         hitSlop={10}
       >
         <AppText size={14} color={colors.muted}>
@@ -193,7 +197,11 @@ const styles = StyleSheet.create({
     borderColor: colors.hairline,
     alignItems: 'center',
     justifyContent: 'center',
-    alignSelf: 'flex-start',
+    // overlay at the physical top-left, mirroring the trial paywall's ✕
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    zIndex: 2,
   },
   header: {
     alignItems: 'center',

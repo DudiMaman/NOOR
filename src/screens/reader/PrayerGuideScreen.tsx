@@ -70,14 +70,14 @@ export function PrayerGuideScreen({ navigation, route }: Props) {
           {guide.sunnahBefore != null && (
             <View style={styles.chip}>
               <AppText weight="medium" size={12} color={colors.inkBody}>
-                {`سنة قبلية · ${t('reader.rakaat', { count: guide.sunnahBefore })}`}
+                {`${t('reader.sunnahBefore')} · ${t('reader.rakaat', { count: guide.sunnahBefore })}`}
               </AppText>
             </View>
           )}
           {guide.sunnahAfter != null && (
             <View style={styles.chip}>
               <AppText weight="medium" size={12} color={colors.inkBody}>
-                {`سنة بعدية · ${t('reader.rakaat', { count: guide.sunnahAfter })}`}
+                {`${t('reader.sunnahAfter')} · ${t('reader.rakaat', { count: guide.sunnahAfter })}`}
               </AppText>
             </View>
           )}
@@ -115,6 +115,19 @@ export function PrayerGuideScreen({ navigation, route }: Props) {
             </View>
           </Card>
         ))}
+
+        {/* Continue into the post-prayer adhkar */}
+        <Pressable
+          onPress={() => navigation.navigate('AdhkarReader', { kind: 'afterPrayer' })}
+          style={({ pressed }) => [styles.afterPrayerCard, pressed && { opacity: 0.9 }]}
+        >
+          <AppText amiri size={20} color={colors.gold300} center>
+            {t('reader.afterPrayer')}
+          </AppText>
+          <AppText size={12.5} color={colors.onDarkMuted} center style={{ marginTop: 4 }}>
+            {t('home.startReading')}
+          </AppText>
+        </Pressable>
       </ScrollView>
     </View>
   );
@@ -198,6 +211,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   diamondNumber: { transform: [{ rotate: '-45deg' }] },
+  afterPrayerCard: {
+    backgroundColor: colors.emerald800,
+    borderRadius: radii.cardLarge,
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    marginTop: 6,
+  },
   stepBody: { flex: 1 },
   stepText: { marginTop: 4 },
   recitation: {

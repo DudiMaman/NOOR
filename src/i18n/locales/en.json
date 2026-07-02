@@ -182,7 +182,8 @@
     "searchPlaceholder": "Search for a city…",
     "confirm": "Confirm location",
     "permissionDenied": "We couldn't access your location — choose a city from the list.",
-    "locating": "Locating…"
+    "locating": "Locating…",
+    "myLocation": "My location"
   },
   "home": {
     "greeting": "As-salamu alaykum",
@@ -232,7 +233,8 @@
     "verseN": "Verse {{n}}",
     "surahList": "Surahs",
     "continueReading": "Continue reading",
-    "fontSize": "Font size"
+    "fontSize": "Font size",
+    "surahTitle": "Surat {{name}}"
   },
   "customs": {
     "title": "Occasions & Sunnahs",
@@ -354,7 +356,9 @@
     "completed": "Wird completed — may Allah accept",
     "progress": "{{done}} / {{total}}",
     "howToPray": "How to pray",
-    "rakaat": "{{count}} rak'ahs"
+    "rakaat": "{{count}} rak'ahs",
+    "sunnahBefore": "Sunnah before",
+    "sunnahAfter": "Sunnah after"
   },
   "notificationsContent": {
     "adhkarMorningTitle": "Morning adhkar",
@@ -391,7 +395,33 @@
     "friday": "Friday",
     "saturday": "Saturday"
   },
-  "gregorianMonths": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-  "hijriMonths": ["Muharram", "Safar", "Rabi' al-Awwal", "Rabi' al-Thani", "Jumada al-Ula", "Jumada al-Akhirah", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu al-Qi'dah", "Dhu al-Hijjah"],
+  "gregorianMonths": [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ],
+  "hijriMonths": [
+    "Muharram",
+    "Safar",
+    "Rabi' al-Awwal",
+    "Rabi' al-Thani",
+    "Jumada al-Ula",
+    "Jumada al-Akhirah",
+    "Rajab",
+    "Sha'ban",
+    "Ramadan",
+    "Shawwal",
+    "Dhu al-Qi'dah",
+    "Dhu al-Hijjah"
+  ],
   "hijriSuffix": "AH"
 }

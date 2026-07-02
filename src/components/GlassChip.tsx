@@ -15,6 +15,9 @@ export function GlassChip({
   onPress,
   pill = true,
   softBorder = false,
+  labelSize = 13,
+  labelWeight = 'semibold',
+  labelColor = colors.creamText,
   style,
 }: PropsWithChildren<{
   label?: string;
@@ -22,6 +25,9 @@ export function GlassChip({
   pill?: boolean;
   /** use the softer cream border (skip button) instead of gold */
   softBorder?: boolean;
+  labelSize?: number;
+  labelWeight?: 'light' | 'regular' | 'medium' | 'semibold' | 'bold';
+  labelColor?: string;
   style?: StyleProp<ViewStyle>;
 }>) {
   const content = (
@@ -35,7 +41,7 @@ export function GlassChip({
       ]}
     >
       {label != null ? (
-        <AppText weight="semibold" size={13} color={colors.creamText}>
+        <AppText weight={labelWeight} size={labelSize} color={labelColor}>
           {label}
         </AppText>
       ) : (

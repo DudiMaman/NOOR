@@ -182,7 +182,8 @@
     "searchPlaceholder": "Cari bandar…",
     "confirm": "Sahkan lokasi",
     "permissionDenied": "Kami tidak dapat mengakses lokasi anda — pilih bandar daripada senarai.",
-    "locating": "Mencari lokasi…"
+    "locating": "Mencari lokasi…",
+    "myLocation": "Lokasi saya"
   },
   "home": {
     "greeting": "Assalamu alaikum",
@@ -232,7 +233,8 @@
     "verseN": "Ayat {{n}}",
     "surahList": "Surah-surah",
     "continueReading": "Teruskan membaca",
-    "fontSize": "Saiz fon"
+    "fontSize": "Saiz fon",
+    "surahTitle": "Surah {{name}}"
   },
   "customs": {
     "title": "Acara dan Sunnah",
@@ -354,7 +356,9 @@
     "completed": "Wird selesai — semoga Allah menerima",
     "progress": "{{done}} / {{total}}",
     "howToPray": "Cara menunaikan solat",
-    "rakaat": "{{count}} rakaat"
+    "rakaat": "{{count}} rakaat",
+    "sunnahBefore": "Sunat qabliyah",
+    "sunnahAfter": "Sunat ba'diyah"
   },
   "notificationsContent": {
     "adhkarMorningTitle": "Zikir pagi",
@@ -391,7 +395,33 @@
     "friday": "Jumaat",
     "saturday": "Sabtu"
   },
-  "gregorianMonths": ["Januari", "Februari", "Mac", "April", "Mei", "Juni", "Julai", "Ogos", "September", "Oktober", "November", "Disember"],
-  "hijriMonths": ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jumadil Ula", "Jumadil Akhirah", "Rajab", "Syaaban", "Ramadan", "Syawwal", "Zulkaedah", "Zulhijjah"],
+  "gregorianMonths": [
+    "Januari",
+    "Februari",
+    "Mac",
+    "April",
+    "Mei",
+    "Juni",
+    "Julai",
+    "Ogos",
+    "September",
+    "Oktober",
+    "November",
+    "Disember"
+  ],
+  "hijriMonths": [
+    "Muharam",
+    "Safar",
+    "Rabiulawal",
+    "Rabiulakhir",
+    "Jumadil Ula",
+    "Jumadil Akhirah",
+    "Rajab",
+    "Syaaban",
+    "Ramadan",
+    "Syawwal",
+    "Zulkaedah",
+    "Zulhijjah"
+  ],
   "hijriSuffix": "H"
 }

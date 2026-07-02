@@ -49,7 +49,7 @@ export function LocationSetupScreen({ navigation, route }: Props) {
         accuracy: Location.Accuracy.Balanced,
       });
       const { latitude, longitude } = position.coords;
-      let label = 'موقعي';
+      let label = t('location.myLocation');
       try {
         const [place] = await Location.reverseGeocodeAsync({ latitude, longitude });
         label = place?.city || place?.subregion || place?.region || label;
@@ -223,6 +223,7 @@ export function LocationSetupScreen({ navigation, route }: Props) {
         label={t('location.confirm')}
         onPress={confirm}
         disabled={!selection}
+        labelWeight="semibold"
         style={styles.confirmButton}
       />
     </View>

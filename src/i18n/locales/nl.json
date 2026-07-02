@@ -182,7 +182,8 @@
     "searchPlaceholder": "Zoek een stad…",
     "confirm": "Bevestig locatie",
     "permissionDenied": "We konden je locatie niet benaderen — kies een stad uit de lijst.",
-    "locating": "Locatie bepalen…"
+    "locating": "Locatie bepalen…",
+    "myLocation": "Mijn locatie"
   },
   "home": {
     "greeting": "As-salamu alaykum",
@@ -232,7 +233,8 @@
     "verseN": "Vers {{n}}",
     "surahList": "Soerah's",
     "continueReading": "Doorgaan met lezen",
-    "fontSize": "Lettergrootte"
+    "fontSize": "Lettergrootte",
+    "surahTitle": "Soera {{name}}"
   },
   "customs": {
     "title": "Gelegenheden & Sunna's",
@@ -354,7 +356,9 @@
     "completed": "Wird voltooid — moge Allah aanvaarden",
     "progress": "{{done}} / {{total}}",
     "howToPray": "Hoe bid je",
-    "rakaat": "{{count}} rak'ahs"
+    "rakaat": "{{count}} rak'ahs",
+    "sunnahBefore": "Soenna vooraf",
+    "sunnahAfter": "Soenna erna"
   },
   "notificationsContent": {
     "adhkarMorningTitle": "Ochtendadhkar",
@@ -391,7 +395,33 @@
     "friday": "vrijdag",
     "saturday": "zaterdag"
   },
-  "gregorianMonths": ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"],
-  "hijriMonths": ["Moeharram", "Safar", "Rabi' al-awwal", "Rabi' al-thani", "Djoemaada al-awwal", "Djoemaada al-akhirah", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhoe al-Qi'dah", "Dhoe al-Hijjah"],
+  "gregorianMonths": [
+    "januari",
+    "februari",
+    "maart",
+    "april",
+    "mei",
+    "juni",
+    "juli",
+    "augustus",
+    "september",
+    "oktober",
+    "november",
+    "december"
+  ],
+  "hijriMonths": [
+    "Moeharram",
+    "Safar",
+    "Rabi' al-awwal",
+    "Rabi' al-thani",
+    "Djoemaada al-awwal",
+    "Djoemaada al-akhirah",
+    "Rajab",
+    "Sha'ban",
+    "Ramadan",
+    "Shawwal",
+    "Dhoe al-Qi'dah",
+    "Dhoe al-Hijjah"
+  ],
   "hijriSuffix": "H"
 }

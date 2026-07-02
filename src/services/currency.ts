@@ -61,8 +61,8 @@ export function formatLocalPrice(usd: number, currencyCode = getLocalCurrencyCod
   const info = CURRENCIES[currencyCode] ?? CURRENCIES.USD;
   const value = usd * info.rate;
   const decimals = info.decimals ?? 2;
-  // psychological pricing: keep .99 / .90 endings where decimals are shown
-  const rounded = decimals === 0 ? Math.round(value) : Math.floor(value) + 0.9;
+  // psychological pricing: round to the nearest whole, then land on .99
+  const rounded = decimals === 0 ? Math.round(value) : Math.max(0.99, Math.round(value) - 0.01);
   const amount = rounded.toFixed(decimals);
   return info.suffix ? `${amount} ${info.symbol}` : `${info.symbol}${amount}`;
 }

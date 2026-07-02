@@ -61,7 +61,11 @@ export function QuranReaderScreen() {
   useEffect(() => {
     if (!playing) return;
     const id = setInterval(() => {
-      setProgress((p) => Math.min(1, p + 0.004));
+      setProgress((p) => {
+        const next = Math.min(1, p + 0.004);
+        if (next >= 1) setPlaying(false);
+        return next;
+      });
     }, 250);
     return () => clearInterval(id);
   }, [playing]);
@@ -91,7 +95,7 @@ export function QuranReaderScreen() {
         </Pressable>
         <View style={styles.topCenter}>
           <AppText weight="bold" size={16.5} color={colors.ink}>
-            {'سورة ' + surah.namePlain}
+            {t('quran.surahTitle', { name: surah.namePlain })}
           </AppText>
           <AppText size={11.5} color={colors.faint} style={{ marginTop: 1 }}>
             {t('quran.juzPage', { juz: surah.juz, page: surah.page })}
@@ -186,14 +190,20 @@ export function QuranReaderScreen() {
                 >
                   {verse.text}
                 </AppText>
-                <AppText
-                  amiri
-                  size={19 * quranFontScale}
-                  lineHeight={54 * quranFontScale}
-                  color={colors.gold500}
+                <View
+                  style={[
+                    styles.verseMarker,
+                    {
+                      width: 27 * quranFontScale,
+                      height: 27 * quranFontScale,
+                      borderRadius: 13.5 * quranFontScale,
+                    },
+                  ]}
                 >
-                  {' ﴿' + toArabicDigits(verse.number) + '﴾ '}
-                </AppText>
+                  <AppText amiri size={13 * quranFontScale} color={colors.goldDark}>
+                    {toArabicDigits(verse.number)}
+                  </AppText>
+                </View>
               </React.Fragment>
             ))}
           </AppText>
@@ -272,6 +282,14 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.cream,
+  },
+  verseMarker: {
+    borderWidth: 1.2,
+    borderColor: colors.gold500,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 7,
+    transform: [{ translateY: 6 }],
   },
   topBar: {
     flexDirection: 'row',

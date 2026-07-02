@@ -33,12 +33,19 @@ export function AdhkarReaderScreen({ navigation, route }: Props) {
   const insets = useSafeAreaInsets();
   const items = ADHKAR[kind];
 
+  const markedRef = useRef(false);
   const [remaining, setRemaining] = useState<number[]>(() => items.map((item) => item.repeat));
+  // navigate() can update params in place — reset progress for the new set
+  const [trackedKind, setTrackedKind] = useState(kind);
+  if (trackedKind !== kind) {
+    setTrackedKind(kind);
+    setRemaining(items.map((item) => item.repeat));
+    markedRef.current = false;
+  }
   const done = remaining.filter((count) => count === 0).length;
   const allDone = items.length > 0 && done === items.length;
 
   const markAdhkarCompleted = useContentStore((s) => s.markAdhkarCompleted);
-  const markedRef = useRef(false);
   useEffect(() => {
     if (allDone && !markedRef.current) {
       markedRef.current = true;

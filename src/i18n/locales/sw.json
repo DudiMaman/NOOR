@@ -182,7 +182,8 @@
     "searchPlaceholder": "Tafuta jiji…",
     "confirm": "Thibitisha mahali",
     "permissionDenied": "Hatuwezi kufika mahali yako — chagua jiji kutoka kwenye orodha.",
-    "locating": "Inatafuta…"
+    "locating": "Inatafuta…",
+    "myLocation": "Mahali pangu"
   },
   "home": {
     "greeting": "Assalamu alaykum",
@@ -232,7 +233,8 @@
     "verseN": "Ayati {{n}}",
     "surahList": "Sura",
     "continueReading": "Endelea kusoma",
-    "fontSize": "Ukubwa wa herufi"
+    "fontSize": "Ukubwa wa herufi",
+    "surahTitle": "Sura {{name}}"
   },
   "customs": {
     "title": "Maadhimisho & Sunna",
@@ -354,7 +356,9 @@
     "completed": "Wird ilivyokamilika — Mungu na kamatia",
     "progress": "{{done}} / {{total}}",
     "howToPray": "Jinsi ya kusali",
-    "rakaat": "{{count}} raka'ah"
+    "rakaat": "{{count}} raka'ah",
+    "sunnahBefore": "Suna kabla",
+    "sunnahAfter": "Suna baada"
   },
   "notificationsContent": {
     "adhkarMorningTitle": "Adhkari za asubuhi",
@@ -391,7 +395,33 @@
     "friday": "Ijumaa",
     "saturday": "Jumamosi"
   },
-  "gregorianMonths": ["Januari", "Februari", "Machi", "Aprili", "Mei", "Juni", "Julai", "Agosti", "Septemba", "Oktoba", "Novemba", "Desemba"],
-  "hijriMonths": ["Muharram", "Safar", "Rabiul-Awwal", "Rabiul-Akhir", "Jumadal-Ula", "Jumadal-Akhirah", "Rajab", "Shaaban", "Ramadhan", "Shawwal", "Dhul-Qa'dah", "Dhul-Hijjah"],
+  "gregorianMonths": [
+    "Januari",
+    "Februari",
+    "Machi",
+    "Aprili",
+    "Mei",
+    "Juni",
+    "Julai",
+    "Agosti",
+    "Septemba",
+    "Oktoba",
+    "Novemba",
+    "Desemba"
+  ],
+  "hijriMonths": [
+    "Muharram",
+    "Safar",
+    "Rabiul-Awwal",
+    "Rabiul-Akhir",
+    "Jumadal-Ula",
+    "Jumadal-Akhirah",
+    "Rajab",
+    "Shaaban",
+    "Ramadhan",
+    "Shawwal",
+    "Dhul-Qa'dah",
+    "Dhul-Hijjah"
+  ],
   "hijriSuffix": "H"
 }

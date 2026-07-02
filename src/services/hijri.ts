@@ -12,7 +12,10 @@ export interface HijriDate {
   day: number;
 }
 
-const ISLAMIC_EPOCH = 1948439.5; // julian day of 1 Muharram 1 AH (astronomical)
+// Julian day of 1 Muharram 1 AH — astronomical epoch (15 July 622).
+// Verified against Umm al-Qura anchors: 2026-07-02 → 17 Muharram 1448,
+// 2024-07-07 → 1 Muharram 1446, Ramadan/Eid within ±2 days.
+const ISLAMIC_EPOCH = 1948438.5;
 
 function gregorianToJulianDay(year: number, month: number, day: number): number {
   const a = Math.floor((14 - month) / 12);

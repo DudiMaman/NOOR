@@ -23,6 +23,8 @@ import { LanguageSuggestionSheet } from './src/components';
 import { colors } from './src/theme';
 import { useSettingsStore } from './src/store/useSettingsStore';
 import { useSubscriptionStore } from './src/store/useSubscriptionStore';
+import { useUserStore } from './src/store/useUserStore';
+import { useContentStore } from './src/store/useContentStore';
 import { rescheduleAll } from './src/services/notifications';
 
 SplashScreenNative.preventAutoHideAsync().catch(() => {});
@@ -39,23 +41,25 @@ const navTheme = {
 
 /** Wait for zustand/AsyncStorage rehydration before rendering navigation. */
 function useStoresHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(
-    () => useSettingsStore.persist.hasHydrated() && useSubscriptionStore.persist.hasHydrated()
-  );
+  const allHydrated = () =>
+    useSettingsStore.persist.hasHydrated() &&
+    useSubscriptionStore.persist.hasHydrated() &&
+    useUserStore.persist.hasHydrated() &&
+    useContentStore.persist.hasHydrated();
+  const [hydrated, setHydrated] = useState(allHydrated);
   useEffect(() => {
     if (hydrated) return;
     const check = () => {
-      if (useSettingsStore.persist.hasHydrated() && useSubscriptionStore.persist.hasHydrated()) {
-        setHydrated(true);
-      }
+      if (allHydrated()) setHydrated(true);
     };
-    const unsub1 = useSettingsStore.persist.onFinishHydration(check);
-    const unsub2 = useSubscriptionStore.persist.onFinishHydration(check);
+    const unsubs = [
+      useSettingsStore.persist.onFinishHydration(check),
+      useSubscriptionStore.persist.onFinishHydration(check),
+      useUserStore.persist.onFinishHydration(check),
+      useContentStore.persist.onFinishHydration(check),
+    ];
     check();
-    return () => {
-      unsub1();
-      unsub2();
-    };
+    return () => unsubs.forEach((unsub) => unsub());
   }, [hydrated]);
   return hydrated;
 }

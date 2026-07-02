@@ -47,7 +47,9 @@ export function DailyContentScreen() {
   const archive = getArchive(3, now);
 
   const onShare = () => {
-    void Share.share({ message: activeItem.text + '\n' + activeItem.attribution + ' — نور' });
+    void Share.share({
+      message: activeItem.text + '\n' + activeItem.attribution + ' — ' + t('common.appName'),
+    });
   };
 
   return (
@@ -62,9 +64,11 @@ export function DailyContentScreen() {
           <AppText weight="bold" size={28} color={colors.ink}>
             {t('content.title')}
           </AppText>
-          <AppText size={13} color={colors.muted}>
-            {`${weekdayName(now, t)} · ${hijri.day} ${hijriMonthName(hijri.month, t)}`}
-          </AppText>
+          <Pressable onPress={() => gate(() => navigation.navigate('CustomsHolidays' as never))}>
+            <AppText size={13} color={colors.muted}>
+              {`${weekdayName(now, t)} · ${hijri.day} ${hijriMonthName(hijri.month, t)}`}
+            </AppText>
+          </Pressable>
         </View>
 
         {/* Hadith of the day */}

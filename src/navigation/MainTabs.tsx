@@ -18,8 +18,13 @@ import { SettingsScreen } from '../screens/main/SettingsScreen';
 
 const Tab = createBottomTabNavigator<MainTabsParamList>();
 
-/** Tabs that stay reachable without a subscription (product rule: Home only). */
-const FREE_TABS: (keyof MainTabsParamList)[] = ['Home'];
+/**
+ * Tabs reachable without a subscription. Home is view-only; Settings must stay
+ * reachable so a free user can always get to "manage subscription" (the
+ * comparison paywall) and "restore purchase" — every feature row inside
+ * Settings is individually gated.
+ */
+const FREE_TABS: (keyof MainTabsParamList)[] = ['Home', 'Settings'];
 
 function TabIcon({ route, active }: { route: keyof MainTabsParamList; active: boolean }) {
   const tint = active ? colors.emerald800 : colors.ink;

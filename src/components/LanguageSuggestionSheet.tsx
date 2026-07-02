@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppText } from './AppText';
@@ -49,7 +49,10 @@ export function LanguageSuggestionSheet() {
     dismiss();
     setLanguage(deviceLang);
     setVisible(false);
-    await changeAppLanguage(deviceLang);
+    const directionChanged = await changeAppLanguage(deviceLang);
+    if (directionChanged) {
+      Alert.alert(i18n.getFixedT(deviceLang)('language.restartNote'));
+    }
   };
 
   return (

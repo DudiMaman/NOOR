@@ -42,11 +42,16 @@ async function cancelAllScheduled() {
 }
 
 function at(date: Date): Notifications.DateTriggerInput {
-  return { type: Notifications.SchedulableTriggerInputTypes.DATE, date };
+  return { type: Notifications.SchedulableTriggerInputTypes.DATE, date, channelId: CHANNEL_ID };
 }
 
 function dailyAt(hour: number, minute: number): Notifications.DailyTriggerInput {
-  return { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour, minute };
+  return {
+    type: Notifications.SchedulableTriggerInputTypes.DAILY,
+    hour,
+    minute,
+    channelId: CHANNEL_ID,
+  };
 }
 
 /**
@@ -146,6 +151,7 @@ export async function rescheduleAll(options: {
         weekday: 6, // Friday (1 = Sunday)
         hour: 8,
         minute: 30,
+        channelId: CHANNEL_ID,
       },
     });
   }
@@ -163,6 +169,7 @@ export async function rescheduleAll(options: {
           weekday,
           hour: 20,
           minute: 0,
+          channelId: CHANNEL_ID,
         },
       });
     }

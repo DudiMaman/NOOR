@@ -124,19 +124,30 @@ export function PrayerTimesScreen() {
                   <IconChip size={36} gold>
                     <View style={styles.heroDot} />
                   </IconChip>
-                  <View style={{ flex: 1 }}>
+                  <Pressable
+                    style={{ flex: 1 }}
+                    onPress={() =>
+                      gate(() =>
+                        navigation.navigate('PrayerGuide', {
+                          prayer: key as Exclude<PrayerKey, 'sunrise'>,
+                        })
+                      )
+                    }
+                  >
                     <AppText weight="bold" size={16.5} color={colors.creamText}>
                       {t(`prayers.${key}`)}
                     </AppText>
                     <AppText weight="semibold" size={12} color={colors.gold300}>
                       {t('prayers.nextRemaining', { time: formatRemainingShort(next.remainingMs) })}
                     </AppText>
-                  </View>
+                  </Pressable>
                   <AppText weight="bold" size={22} color={colors.gold300} tabular>
                     {formatTime(time)}
                   </AppText>
                   <IOSToggle
                     goldWhenOn
+                    width={44}
+                    height={27}
                     value={reminders.prayers[key]}
                     onValueChange={(v) => gate(() => setPrayerReminder(key, v))}
                   />
@@ -154,18 +165,30 @@ export function PrayerTimesScreen() {
                 <IconChip size={36}>
                   <PrayerMiniIcon prayer={key} />
                 </IconChip>
-                <View style={{ flex: 1 }}>
+                <Pressable
+                  style={{ flex: 1 }}
+                  disabled={key === 'sunrise'}
+                  onPress={() =>
+                    gate(() =>
+                      navigation.navigate('PrayerGuide', {
+                        prayer: key as Exclude<PrayerKey, 'sunrise'>,
+                      })
+                    )
+                  }
+                >
                   <AppText weight="bold" size={16} color={colors.ink}>
                     {t(`prayers.${key}`)}
                   </AppText>
                   <AppText size={12} color={colors.faint}>
                     {statusFor(key, time)}
                   </AppText>
-                </View>
+                </Pressable>
                 <AppText weight="bold" size={20} color={passed ? colors.muted : colors.ink} tabular>
                   {formatTime(time)}
                 </AppText>
                 <IOSToggle
+                  width={44}
+                  height={27}
                   value={reminders.prayers[key]}
                   onValueChange={(v) => gate(() => setPrayerReminder(key, v))}
                 />

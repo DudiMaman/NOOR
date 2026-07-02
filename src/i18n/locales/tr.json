@@ -182,7 +182,8 @@
     "searchPlaceholder": "Şehir ara…",
     "confirm": "Konumu onayla",
     "permissionDenied": "Konumunuza erişemedik — listeden bir şehir seçin.",
-    "locating": "Konum bulunuyor…"
+    "locating": "Konum bulunuyor…",
+    "myLocation": "Konumum"
   },
   "home": {
     "greeting": "Assalamu alaikum",
@@ -232,7 +233,8 @@
     "verseN": "Ayet {{n}}",
     "surahList": "Sureler",
     "continueReading": "Okumaya devam et",
-    "fontSize": "Yazı boyutu"
+    "fontSize": "Yazı boyutu",
+    "surahTitle": "{{name}} Suresi"
   },
   "customs": {
     "title": "Merasimler ve Sünneler",
@@ -354,7 +356,9 @@
     "completed": "Virdin tamamlandı — Allah kabul etsin",
     "progress": "{{done}} / {{total}}",
     "howToPray": "Namaz nasıl kılınır",
-    "rakaat": "{{count}} rekat"
+    "rakaat": "{{count}} rekat",
+    "sunnahBefore": "Öncesi sünnet",
+    "sunnahAfter": "Sonrası sünnet"
   },
   "notificationsContent": {
     "adhkarMorningTitle": "Sabah zikirler",
@@ -391,7 +395,33 @@
     "friday": "Cuma",
     "saturday": "Cumartesi"
   },
-  "gregorianMonths": ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
-  "hijriMonths": ["Muharrem", "Safer", "Rebiülevvel", "Rebiülahir", "Cemaziyelevvel", "Cemaziyelahir", "Recep", "Şaban", "Ramazan", "Şevval", "Zilkade", "Zilhicce"],
+  "gregorianMonths": [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık"
+  ],
+  "hijriMonths": [
+    "Muharrem",
+    "Safer",
+    "Rebiülevvel",
+    "Rebiülahir",
+    "Cemaziyelevvel",
+    "Cemaziyelahir",
+    "Recep",
+    "Şaban",
+    "Ramazan",
+    "Şevval",
+    "Zilkade",
+    "Zilhicce"
+  ],
   "hijriSuffix": "H."
 }

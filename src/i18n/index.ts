@@ -78,19 +78,23 @@ export function initI18n(language: string) {
   return i18n;
 }
 
+// I18nManager.isRTL is fixed for the session even after forceRTL, so track
+// the direction we've asked the OS to apply for correct repeat switches.
+let pendingRTL = I18nManager.isRTL;
+
 /**
  * Align the native layout direction with the language.
- * Returns true if the direction changed (an app reload is then required
- * for React Native to re-mirror existing layouts).
+ * Returns true if the rendered session direction now differs from the
+ * requested one (an app reload is then required to re-mirror layouts).
  */
 export function syncLayoutDirection(language: string): boolean {
   const rtl = isRTLLanguage(language);
-  I18nManager.allowRTL(rtl);
-  if (I18nManager.isRTL !== rtl) {
+  if (pendingRTL !== rtl) {
+    I18nManager.allowRTL(rtl);
     I18nManager.forceRTL(rtl);
-    return true;
+    pendingRTL = rtl;
   }
-  return false;
+  return I18nManager.isRTL !== rtl;
 }
 
 export async function changeAppLanguage(language: string): Promise<boolean> {
