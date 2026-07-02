@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 22,
     paddingBottom: 120,
   },
+  pressedDim: { opacity: 0.7 },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
