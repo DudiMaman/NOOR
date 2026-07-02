@@ -391,18 +391,6 @@
     "friday": "Jumaat",
     "saturday": "Sabtu"
   },
-  "occasions": {
-    "newYear": "Tahun Baru Hijrah",
-    "ashura": "Hari Ashura",
-    "mawlid": "Mawlid an-Nabi",
-    "israMiraj": "Isra dan Mi'raj",
-    "nisfShaban": "Malam Nisfu Syaaban",
-    "ramadanStart": "Permulaan Ramadan",
-    "laylatQadr": "Laylat al-Qadr (yang disangka)",
-    "eidFitr": "Hari Raya Aidilfitri",
-    "arafah": "Hari Arafah",
-    "eidAdha": "Hari Raya Aidiladha"
-  },
   "gregorianMonths": ["Januari", "Februari", "Mac", "April", "Mei", "Juni", "Julai", "Ogos", "September", "Oktober", "November", "Disember"],
   "hijriMonths": ["Muharam", "Safar", "Rabiulawal", "Rabiulakhir", "Jumadil Ula", "Jumadil Akhirah", "Rajab", "Syaaban", "Ramadan", "Syawwal", "Zulkaedah", "Zulhijjah"],
   "hijriSuffix": "H"
