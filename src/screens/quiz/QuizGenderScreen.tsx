@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, CheckCircle } from '../../components';
-import { colors, shadows } from '../../theme';
+import { shadows, useTheme } from '../../theme';
 import { useUserStore, type Gender } from '../../store/useUserStore';
 import { QuizLayout } from './QuizLayout';
 
@@ -19,6 +19,7 @@ export function QuizGenderScreen() {
   const navigation = useNavigation();
   const quiz = useUserStore((s) => s.quiz);
   const setQuiz = useUserStore((s) => s.setQuiz);
+  const { colors } = useTheme();
 
   return (
     <QuizLayout
@@ -37,7 +38,9 @@ export function QuizGenderScreen() {
               onPress={() => setQuiz({ gender: option.key })}
               style={({ pressed }) => [
                 styles.card,
-                selected ? styles.cardSelected : styles.cardIdle,
+                selected
+                  ? [styles.cardSelected, { backgroundColor: colors.creamTint, borderColor: colors.gold500 }]
+                  : [styles.cardIdle, { backgroundColor: colors.card, borderColor: colors.fill8 }],
                 selected && shadows.selectedCard,
                 pressed && { opacity: 0.9 },
               ]}
@@ -87,14 +90,10 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   cardIdle: {
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.fill8,
   },
   cardSelected: {
-    backgroundColor: colors.creamTint,
     borderWidth: 1.5,
-    borderColor: colors.gold500,
   },
   cornerCheck: { position: 'absolute', top: 12, left: 12, zIndex: 2 },
   medallion: {

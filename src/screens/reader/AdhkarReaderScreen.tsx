@@ -11,7 +11,7 @@ import { AppText, Card, DiamondBullet, ProgressBar, RadialGlow } from '../../com
 import { ADHKAR } from '../../content/adhkar';
 import { useContentStore } from '../../store/useContentStore';
 import { dateKey } from '../../services/dates';
-import { colors, gradients, radii, shadows } from '../../theme';
+import { gradients, lightColors, radii, shadows, useTheme } from '../../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AdhkarReader'>;
 
@@ -31,6 +31,7 @@ export function AdhkarReaderScreen({ navigation, route }: Props) {
   const { kind } = route.params;
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const items = ADHKAR[kind];
 
   const markedRef = useRef(false);
@@ -65,14 +66,18 @@ export function AdhkarReaderScreen({ navigation, route }: Props) {
   }, []);
 
   return (
-    <View style={[styles.root, { paddingTop: insets.top + 14 }]}>
+    <View style={[styles.root, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}>
       {/* Back */}
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={t('common.back')}
         hitSlop={8}
         onPress={() => navigation.goBack()}
-        style={({ pressed }) => [styles.backCircle, pressed && styles.pressedDim]}
+        style={({ pressed }) => [
+          styles.backCircle,
+          { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+          pressed && styles.pressedDim,
+        ]}
       >
         <AppText weight="bold" size={17} color={colors.emerald800}>
           ›
@@ -132,7 +137,13 @@ export function AdhkarReaderScreen({ navigation, route }: Props) {
               key={item.id}
               padded={false}
               onPress={() => onPressItem(index)}
-              style={[styles.dhikrCard, itemDone && styles.dhikrCardDone]}
+              style={[
+                styles.dhikrCard,
+                itemDone && [
+                  styles.dhikrCardDone,
+                  { backgroundColor: colors.creamTint, borderColor: colors.gold500 },
+                ],
+              ]}
             >
               <AppText amiri size={20} lineHeight={38} color={colors.ink}>
                 {item.text}
@@ -141,7 +152,12 @@ export function AdhkarReaderScreen({ navigation, route }: Props) {
                 <AppText size={12.5} color={colors.muted} style={styles.sourceText}>
                   {item.source ?? ''}
                 </AppText>
-                <View style={styles.repeatPill}>
+                <View
+                  style={[
+                    styles.repeatPill,
+                    { backgroundColor: colors.goldTint12, borderColor: colors.gold500 },
+                  ]}
+                >
                   <AppText weight="bold" size={12} color={colors.goldDark}>
                     {itemDone ? '✓' : t('reader.repeat', { count: left })}
                   </AppText>
@@ -171,16 +187,13 @@ export function AdhkarReaderScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.cream,
     paddingHorizontal: 20,
   },
   backCircle: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -221,9 +234,7 @@ const styles = StyleSheet.create({
     padding: 18,
   },
   dhikrCardDone: {
-    backgroundColor: colors.creamTint,
     borderWidth: 1.5,
-    borderColor: colors.gold500,
     ...shadows.selectedCard,
   },
   dhikrFooter: {
@@ -235,9 +246,7 @@ const styles = StyleSheet.create({
   },
   sourceText: { flexShrink: 1 },
   repeatPill: {
-    backgroundColor: colors.goldTint12,
     borderWidth: 1,
-    borderColor: colors.gold500,
     borderRadius: radii.pill,
     paddingVertical: 4,
     paddingHorizontal: 12,
@@ -245,7 +254,8 @@ const styles = StyleSheet.create({
   },
   virtue: { marginTop: 8 },
   celebration: {
-    backgroundColor: colors.emerald800,
+    // Design-dark celebration card — keeps the emerald literal in both schemes.
+    backgroundColor: lightColors.emerald800,
     borderRadius: 22,
     padding: 22,
     alignItems: 'center',

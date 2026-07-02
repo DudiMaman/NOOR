@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, PrimaryButton, ProgressBar } from '../../components';
-import { colors } from '../../theme';
+import { useTheme } from '../../theme';
 
 const TOTAL_STEPS = 4;
 
@@ -32,9 +32,12 @@ export function QuizLayout({
 }>) {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 14 }]}>
+    <View
+      style={[styles.container, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}
+    >
       <View style={styles.progressRow}>
         <ProgressBar progress={step / TOTAL_STEPS} height={5} style={styles.progressBar} />
         <AppText
@@ -73,7 +76,6 @@ export function QuizLayout({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.cream,
     paddingHorizontal: 24,
   },
   progressRow: {

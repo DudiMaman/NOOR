@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, IOSToggle, ListCard, SectionLabel } from '../components';
-import { colors, radii } from '../theme';
+import { radii, useTheme } from '../theme';
 import { useSettingsStore, type PreAlertMinutes } from '../store/useSettingsStore';
 import { ensurePermissions } from '../services/notifications';
 
@@ -25,6 +25,7 @@ const PRE_ALERT_OPTIONS: PreAlertMinutes[] = [5, 10, 15];
  */
 export function RemindersScreen() {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
@@ -37,13 +38,17 @@ export function RemindersScreen() {
   }, []);
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + 14 }]}>
+    <View style={[styles.screen, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Back */}
         <Pressable
           onPress={() => navigation.goBack()}
           hitSlop={10}
-          style={({ pressed }) => [styles.backCircle, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [
+            styles.backCircle,
+            { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+            pressed && { opacity: 0.7 },
+          ]}
         >
           <AppText weight="bold" size={17} color={colors.emerald800}>
             ›
@@ -94,7 +99,12 @@ export function RemindersScreen() {
                   <Pressable
                     key={m}
                     onPress={() => setReminders({ preAlertMinutes: m })}
-                    style={[styles.chip, selected ? styles.chipSelected : styles.chipIdle]}
+                    style={[
+                      styles.chip,
+                      selected
+                        ? { backgroundColor: colors.emerald800 }
+                        : [styles.chipIdle, { borderColor: colors.trackOff }],
+                    ]}
                   >
                     <AppText
                       weight={selected ? 'bold' : 'semibold'}
@@ -203,7 +213,6 @@ export function RemindersScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
   },
   content: {
     paddingHorizontal: 22,
@@ -213,9 +222,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairline,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -235,11 +242,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 11,
   },
-  chipSelected: {
-    backgroundColor: colors.emerald800,
-  },
   chipIdle: {
     borderWidth: 1,
-    borderColor: colors.trackOff,
   },
 });

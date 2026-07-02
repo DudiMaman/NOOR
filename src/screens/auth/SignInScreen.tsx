@@ -16,7 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, PrimaryButton, StarLogo } from '../../components';
-import { colors, fonts } from '../../theme';
+import { fonts, useTheme } from '../../theme';
 import { useUserStore } from '../../store/useUserStore';
 import { verifyUser } from '../../services/auth';
 import type { RootStackParamList } from '../../navigation/types';
@@ -31,14 +31,21 @@ interface FieldProps extends TextInputProps {
 /** Labeled white input card — hairline border, gold when focused. */
 function Field({ label, error, ...inputProps }: FieldProps) {
   const [focused, setFocused] = useState(false);
+  const { colors } = useTheme();
   return (
     <View>
       <AppText weight="semibold" size={13} color={colors.muted} style={styles.fieldLabel}>
         {label}
       </AppText>
-      <View style={[styles.inputCard, focused && styles.inputCardFocused]}>
+      <View
+        style={[
+          styles.inputCard,
+          { backgroundColor: colors.card, borderColor: colors.hairline },
+          focused && [styles.inputCardFocused, { borderColor: colors.gold500 }],
+        ]}
+      >
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.ink }]}
           placeholderTextColor={colors.faint}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
@@ -58,6 +65,7 @@ export function SignInScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { colors } = useTheme();
 
   const signIn = useUserStore((s) => s.signIn);
   const setFlowStage = useUserStore((s) => s.setFlowStage);
@@ -86,18 +94,22 @@ export function SignInScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={[styles.root, { backgroundColor: colors.cream }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        style={styles.root}
+        style={[styles.root, { backgroundColor: colors.cream }]}
         contentContainerStyle={[styles.content, { paddingTop: insets.top + 14 }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         <Pressable
           onPress={() => navigation.goBack()}
-          style={({ pressed }) => [styles.backCircle, pressed && styles.pressed]}
+          style={({ pressed }) => [
+            styles.backCircle,
+            { backgroundColor: colors.card, borderColor: colors.hairline },
+            pressed && styles.pressed,
+          ]}
           hitSlop={8}
         >
           <AppText weight="bold" size={17} color={colors.emerald800}>
@@ -151,7 +163,7 @@ export function SignInScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.cream },
+  root: { flex: 1 },
   content: {
     flexGrow: 1,
     paddingHorizontal: 24,
@@ -161,9 +173,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairline,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
@@ -174,22 +184,18 @@ const styles = StyleSheet.create({
   fields: { marginTop: 28, gap: 14 },
   fieldLabel: { marginBottom: 6 },
   inputCard: {
-    backgroundColor: colors.card,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: colors.hairline,
     paddingHorizontal: 18,
     height: 54,
     justifyContent: 'center',
   },
   inputCardFocused: {
     borderWidth: 1.5,
-    borderColor: colors.gold500,
   },
   input: {
     fontFamily: fonts.regular,
     fontSize: 16,
-    color: colors.ink,
     paddingVertical: 0,
     textAlign: I18nManager.isRTL ? 'right' : 'left',
   },

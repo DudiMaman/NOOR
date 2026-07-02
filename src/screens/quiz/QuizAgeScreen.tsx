@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, SelectableCard } from '../../components';
-import { colors } from '../../theme';
+import { useTheme } from '../../theme';
 import { useUserStore, type AgeRange } from '../../store/useUserStore';
 import { QuizLayout } from './QuizLayout';
 
@@ -16,6 +16,7 @@ export function QuizAgeScreen() {
   const navigation = useNavigation();
   const quiz = useUserStore((s) => s.quiz);
   const setQuiz = useUserStore((s) => s.setQuiz);
+  const { colors } = useTheme();
 
   return (
     <QuizLayout

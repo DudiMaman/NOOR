@@ -8,10 +8,11 @@ import { AppText, CheckCircle, ListCard } from '../../components';
 import { changeAppLanguage } from '../../i18n';
 import { LANGUAGES } from '../../i18n/languages';
 import { useSettingsStore } from '../../store/useSettingsStore';
-import { colors } from '../../theme';
+import { useTheme } from '../../theme';
 
 export function LanguagePickerScreen() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
 
@@ -26,11 +27,17 @@ export function LanguagePickerScreen() {
   };
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + 14 }]}>
+    <View
+      style={[styles.screen, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}
+    >
       <Pressable
         onPress={() => navigation.goBack()}
         hitSlop={8}
-        style={({ pressed }) => [styles.backCircle, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.backCircle,
+          { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+          pressed && styles.pressed,
+        ]}
       >
         <AppText weight="bold" size={17} color={colors.emerald800}>
           ›
@@ -80,7 +87,6 @@ export function LanguagePickerScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
     paddingHorizontal: 22,
   },
   pressed: { opacity: 0.8 },
@@ -88,9 +94,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',

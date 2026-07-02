@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, CheckCircle, SelectableCard } from '../../components';
-import { colors } from '../../theme';
+import { useTheme } from '../../theme';
 import { useUserStore, type Religiosity } from '../../store/useUserStore';
 import { QuizLayout } from './QuizLayout';
 
@@ -17,6 +17,7 @@ export function QuizReligiosityScreen() {
   const quiz = useUserStore((s) => s.quiz);
   const setQuiz = useUserStore((s) => s.setQuiz);
   const setFlowStage = useUserStore((s) => s.setFlowStage);
+  const { colors } = useTheme();
 
   return (
     <QuizLayout

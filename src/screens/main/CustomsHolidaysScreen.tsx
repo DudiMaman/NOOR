@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, IconChip, ListCard, RadialGlow } from '../../components';
-import { colors, gradients, radii, shadows } from '../../theme';
+import { gradients, radii, shadows, useTheme } from '../../theme';
 import { HADITH_ITEMS } from '../../content/hadith';
 import { getUpcomingEvents } from '../../services/islamicEvents';
 import {
@@ -26,6 +26,7 @@ import { useSettingsStore } from '../../store/useSettingsStore';
  */
 export function CustomsHolidaysScreen() {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const gate = usePaywallGate();
@@ -48,7 +49,7 @@ export function CustomsHolidaysScreen() {
   );
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + 14 }]}>
+    <View style={[styles.screen, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Back */}
         <Pressable
@@ -56,7 +57,11 @@ export function CustomsHolidaysScreen() {
           accessibilityLabel={t('common.back')}
           hitSlop={10}
           onPress={() => navigation.goBack()}
-          style={({ pressed }) => [styles.backCircle, pressed && styles.pressedDim]}
+          style={({ pressed }) => [
+            styles.backCircle,
+            { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+            pressed && styles.pressedDim,
+          ]}
         >
           <AppText weight="medium" size={19} color={colors.emerald800} style={{ marginTop: -2 }}>
             ›
@@ -87,7 +92,7 @@ export function CustomsHolidaysScreen() {
                 {formatDualDateShort(next.date, t)}
               </AppText>
             </View>
-            <View style={styles.countCircle}>
+            <View style={[styles.countCircle, { borderColor: colors.goldBorder50 }]}>
               <AppText weight="bold" size={21} color={colors.gold300} tabular>
                 {next.daysAway}
               </AppText>
@@ -122,10 +127,15 @@ export function CustomsHolidaysScreen() {
         </AppText>
         <View style={{ gap: 10 }}>
           {/* Fasting card */}
-          <View style={styles.fastingCard}>
+          <View
+            style={[
+              styles.fastingCard,
+              { backgroundColor: colors.creamTint, borderColor: colors.goldBorder50 },
+            ]}
+          >
             <View style={styles.sunnahRow}>
               <IconChip size={38} dark>
-                <View style={styles.fastingDiamond} />
+                <View style={[styles.fastingDiamond, { backgroundColor: colors.gold300 }]} />
               </IconChip>
               <View style={{ flex: 1 }}>
                 <AppText weight="bold" size={15} color={colors.ink}>
@@ -142,7 +152,7 @@ export function CustomsHolidaysScreen() {
               </Pressable>
             </View>
             {fastingOpen && (
-              <View style={styles.fastingInset}>
+              <View style={[styles.fastingInset, { backgroundColor: colors.creamTint }]}>
                 <AppText amiri size={16} lineHeight={30} color={colors.ink}>
                   {fastingHadith.text}
                 </AppText>
@@ -151,10 +161,12 @@ export function CustomsHolidaysScreen() {
           </View>
 
           {/* Kahf card */}
-          <View style={styles.kahfCard}>
+          <View
+            style={[styles.kahfCard, { backgroundColor: colors.card, borderColor: colors.hairline }]}
+          >
             <View style={styles.sunnahRow}>
               <IconChip size={38}>
-                <View style={styles.bookIcon} />
+                <View style={[styles.bookIcon, { borderColor: colors.goldDark }]} />
               </IconChip>
               <View style={{ flex: 1 }}>
                 <AppText weight="bold" size={15} color={colors.ink}>
@@ -205,7 +217,6 @@ export function CustomsHolidaysScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
   },
   content: {
     paddingHorizontal: 22,
@@ -215,9 +226,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairline,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
@@ -239,7 +248,6 @@ const styles = StyleSheet.create({
     height: 74,
     borderRadius: 37,
     borderWidth: 1.5,
-    borderColor: colors.goldBorder50,
     backgroundColor: 'rgba(196,164,95,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -266,9 +274,7 @@ const styles = StyleSheet.create({
     gap: 13,
   },
   fastingCard: {
-    backgroundColor: colors.creamTint,
     borderWidth: 1,
-    borderColor: colors.goldBorder50,
     borderRadius: 18,
     paddingVertical: 14,
     paddingHorizontal: 18,
@@ -276,19 +282,15 @@ const styles = StyleSheet.create({
   fastingDiamond: {
     width: 9,
     height: 9,
-    backgroundColor: colors.gold300,
     transform: [{ rotate: '45deg' }],
   },
   fastingInset: {
-    backgroundColor: colors.creamTint,
     borderRadius: 12,
     padding: 12,
     marginTop: 12,
   },
   kahfCard: {
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairline,
     borderRadius: 18,
     paddingVertical: 14,
     paddingHorizontal: 18,
@@ -297,7 +299,6 @@ const styles = StyleSheet.create({
     width: 16,
     height: 19,
     borderWidth: 1.5,
-    borderColor: colors.goldDark,
     borderRadius: 3,
   },
   eventRow: {

@@ -9,7 +9,7 @@ import { AppText, CheckCircle, ListCard, PrimaryButton } from '../components';
 import { CITIES } from '../content/cities';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useUserStore } from '../store/useUserStore';
-import { colors, fonts, radii, shadows } from '../theme';
+import { fonts, radii, shadows, useTheme } from '../theme';
 import type { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'LocationSetup'>;
@@ -18,6 +18,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'LocationSetup'>;
 export function LocationSetupScreen({ navigation, route }: Props) {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const setLocation = useSettingsStore((state) => state.setLocation);
   const setFlowStage = useUserStore((state) => state.setFlowStage);
   const fromSettings = route.params?.fromSettings === true;
@@ -101,7 +102,9 @@ export function LocationSetupScreen({ navigation, route }: Props) {
       : t('location.useCurrentSub');
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + 14 }]}>
+    <View
+      style={[styles.screen, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}
+    >
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -112,7 +115,11 @@ export function LocationSetupScreen({ navigation, route }: Props) {
           <Pressable
             onPress={() => navigation.goBack()}
             hitSlop={8}
-            style={({ pressed }) => [styles.backCircle, pressed && { opacity: 0.7 }]}
+            style={({ pressed }) => [
+              styles.backCircle,
+              { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+              pressed && { opacity: 0.7 },
+            ]}
           >
             <AppText weight="bold" size={17} color={colors.emerald800}>
               ›
@@ -132,14 +139,15 @@ export function LocationSetupScreen({ navigation, route }: Props) {
           onPress={useCurrentLocation}
           style={({ pressed }) => [
             styles.gpsCard,
+            { backgroundColor: colors.emerald800 },
             shadows.primaryCta,
-            gpsSelected && styles.gpsCardSelected,
+            gpsSelected && { borderColor: colors.gold500 },
             pressed && { opacity: 0.92 },
           ]}
         >
           <View style={styles.gpsIconCircle}>
-            <View style={styles.gpsRing}>
-              <View style={styles.gpsDot} />
+            <View style={[styles.gpsRing, { borderColor: colors.gold300 }]}>
+              <View style={[styles.gpsDot, { backgroundColor: colors.gold300 }]} />
             </View>
           </View>
           <View style={{ flex: 1 }}>
@@ -167,24 +175,24 @@ export function LocationSetupScreen({ navigation, route }: Props) {
 
         {/* "or choose a city" divider */}
         <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
+          <View style={[styles.dividerLine, { backgroundColor: colors.hairlineStrong }]} />
           <AppText size={13} color={colors.muted}>
             {t('location.orChooseCity')}
           </AppText>
-          <View style={styles.dividerLine} />
+          <View style={[styles.dividerLine, { backgroundColor: colors.hairlineStrong }]} />
         </View>
 
         {/* Search field */}
-        <View style={styles.searchCard}>
-          <View style={styles.searchIcon}>
-            <View style={styles.searchHandle} />
+        <View style={[styles.searchCard, { backgroundColor: colors.card, borderColor: colors.fill8 }]}>
+          <View style={[styles.searchIcon, { borderColor: colors.faint }]}>
+            <View style={[styles.searchHandle, { backgroundColor: colors.faint }]} />
           </View>
           <TextInput
             value={query}
             onChangeText={setQuery}
             placeholder={t('location.searchPlaceholder')}
             placeholderTextColor={colors.faint}
-            style={styles.searchInput}
+            style={[styles.searchInput, { color: colors.ink }]}
           />
         </View>
 
@@ -233,7 +241,6 @@ export function LocationSetupScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
     paddingHorizontal: 24,
   },
   scroll: { flex: 1 },
@@ -242,9 +249,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
@@ -253,7 +258,6 @@ const styles = StyleSheet.create({
   subtitle: { marginTop: 8 },
   gpsCard: {
     marginTop: 24,
-    backgroundColor: colors.emerald800,
     borderRadius: radii.card,
     borderWidth: 1.5,
     borderColor: 'transparent',
@@ -263,7 +267,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 14,
   },
-  gpsCardSelected: { borderColor: colors.gold500 },
   gpsIconCircle: {
     width: 44,
     height: 44,
@@ -278,7 +281,6 @@ const styles = StyleSheet.create({
     height: 14,
     borderRadius: 7,
     borderWidth: 2,
-    borderColor: colors.gold300,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -286,7 +288,6 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: colors.gold300,
   },
   errorText: { marginTop: 10 },
   dividerRow: {
@@ -296,11 +297,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  dividerLine: { flex: 1, height: 1, backgroundColor: colors.hairlineStrong },
+  dividerLine: { flex: 1, height: 1 },
   searchCard: {
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.fill8,
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 18,
@@ -313,7 +312,6 @@ const styles = StyleSheet.create({
     height: 15,
     borderRadius: 7.5,
     borderWidth: 2,
-    borderColor: colors.faint,
     flexShrink: 0,
   },
   searchHandle: {
@@ -323,14 +321,12 @@ const styles = StyleSheet.create({
     width: 7,
     height: 2,
     borderRadius: 2,
-    backgroundColor: colors.faint,
     transform: [{ rotate: '45deg' }],
   },
   searchInput: {
     flex: 1,
     fontFamily: fonts.regular,
     fontSize: 15.5,
-    color: colors.ink,
     paddingVertical: 0,
     textAlign: I18nManager.isRTL ? 'right' : 'left',
   },

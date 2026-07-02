@@ -15,7 +15,7 @@ import {
 } from '../../store/useSettingsStore';
 import { useIsPremium, useSubscriptionStore } from '../../store/useSubscriptionStore';
 import { useUserStore } from '../../store/useUserStore';
-import { colors, radii, shadows } from '../../theme';
+import { radii, shadows, useTheme } from '../../theme';
 
 /** Tap-to-cycle order for the calculation method row. */
 const CALC_CYCLE: CalcMethodKey[] = [
@@ -58,6 +58,7 @@ function SettingsRow({
   value?: string;
   onPress: () => void;
 }) {
+  const { colors } = useTheme();
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
       <AppText weight="semibold" size={15} color={colors.ink} style={styles.rowLabel}>
@@ -77,6 +78,7 @@ function SettingsRow({
 
 export function SettingsScreen() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
   const gate = usePaywallGate();
@@ -135,7 +137,7 @@ export function SettingsScreen() {
 
   return (
     <ScrollView
-      style={styles.screen}
+      style={[styles.screen, { backgroundColor: colors.cream }]}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + 14 }]}
       showsVerticalScrollIndicator={false}
     >
@@ -146,9 +148,19 @@ export function SettingsScreen() {
       {/* Profile card */}
       <Pressable
         onPress={() => gate(() => navigation.navigate('Profile' as never))}
-        style={({ pressed }) => [styles.profileCard, shadows.heroCard, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.profileCard,
+          { backgroundColor: colors.emerald800 },
+          shadows.heroCard,
+          pressed && styles.pressed,
+        ]}
       >
-        <View style={styles.avatar}>
+        <View
+          style={[
+            styles.avatar,
+            { backgroundColor: colors.goldTint20, borderColor: colors.goldBorder50 },
+          ]}
+        >
           <AppText amiri size={26} color={colors.gold300}>
             {(profile?.name || t('home.guest'))[0]}
           </AppText>
@@ -160,7 +172,12 @@ export function SettingsScreen() {
           <View style={styles.badgeRow}>
             {entitled ? (
               <>
-                <View style={styles.premiumChip}>
+                <View
+                  style={[
+                    styles.premiumChip,
+                    { backgroundColor: colors.goldTint20, borderColor: colors.goldBorder50 },
+                  ]}
+                >
                   <AppText weight="bold" size={11} color={colors.gold300}>
                     {t('common.premium') + ' ✦'}
                   </AppText>
@@ -232,7 +249,7 @@ export function SettingsScreen() {
           <AppText weight="semibold" size={15} color={colors.ink} style={styles.rowLabel}>
             {t('settings.appearance')}
           </AppText>
-          {/* Dark theme derivation is future work — the control persists the choice. */}
+          {/* Persists the choice and switches the active theme live via ThemeProvider. */}
           <SegmentedControl
             compact
             options={[
@@ -267,13 +284,12 @@ export function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.cream },
+  screen: { flex: 1 },
   content: { paddingHorizontal: 22, paddingBottom: 120 },
   title: { marginTop: 14 },
   pressed: { opacity: 0.8 },
   profileCard: {
     marginTop: 16,
-    backgroundColor: colors.emerald800,
     borderRadius: radii.cardLarge,
     paddingVertical: 18,
     paddingHorizontal: 20,
@@ -285,9 +301,7 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     borderRadius: 27,
-    backgroundColor: colors.goldTint20,
     borderWidth: 1.5,
-    borderColor: colors.goldBorder50,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
@@ -295,9 +309,7 @@ const styles = StyleSheet.create({
   profileInfo: { flex: 1 },
   badgeRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
   premiumChip: {
-    backgroundColor: colors.goldTint20,
     borderWidth: 1,
-    borderColor: colors.goldBorder50,
     borderRadius: radii.pill,
     paddingVertical: 2,
     paddingHorizontal: 9,

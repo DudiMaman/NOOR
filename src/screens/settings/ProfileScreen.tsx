@@ -8,10 +8,11 @@ import { AppText, ListCard, PrimaryButton, SectionLabel } from '../../components
 import { formatShortDate } from '../../services/dates';
 import { useIsPremium, useSubscriptionStore } from '../../store/useSubscriptionStore';
 import { useUserStore } from '../../store/useUserStore';
-import { colors, fonts, radii, shadows } from '../../theme';
+import { fonts, radii, shadows, useTheme } from '../../theme';
 
 /** Read-only label/value row inside a ListCard. */
 function InfoRow({ label, value }: { label: string; value: string }) {
+  const { colors } = useTheme();
   return (
     <View style={styles.row}>
       <AppText weight="semibold" size={15} color={colors.ink} style={styles.rowLabel}>
@@ -26,6 +27,7 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 
 export function ProfileScreen() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation();
   const entitled = useIsPremium();
@@ -52,7 +54,7 @@ export function ProfileScreen() {
 
   return (
     <ScrollView
-      style={styles.screen}
+      style={[styles.screen, { backgroundColor: colors.cream }]}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + 14 }]}
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
@@ -60,7 +62,11 @@ export function ProfileScreen() {
       <Pressable
         onPress={() => navigation.goBack()}
         hitSlop={8}
-        style={({ pressed }) => [styles.backCircle, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.backCircle,
+          { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+          pressed && styles.pressed,
+        ]}
       >
         <AppText weight="bold" size={17} color={colors.emerald800}>
           ›
@@ -72,8 +78,13 @@ export function ProfileScreen() {
       </AppText>
 
       {/* Emerald identity card */}
-      <View style={[styles.heroCard, shadows.heroCard]}>
-        <View style={styles.avatar}>
+      <View style={[styles.heroCard, { backgroundColor: colors.emerald800 }, shadows.heroCard]}>
+        <View
+          style={[
+            styles.avatar,
+            { backgroundColor: colors.goldTint20, borderColor: colors.goldBorder50 },
+          ]}
+        >
           <AppText amiri size={30} color={colors.gold300}>
             {(profile?.name || t('home.guest'))[0]}
           </AppText>
@@ -85,7 +96,12 @@ export function ProfileScreen() {
           <View style={styles.badgeRow}>
             {entitled ? (
               <>
-                <View style={styles.premiumChip}>
+                <View
+                  style={[
+                    styles.premiumChip,
+                    { backgroundColor: colors.goldTint20, borderColor: colors.goldBorder50 },
+                  ]}
+                >
                   <AppText weight="bold" size={11} color={colors.gold300}>
                     {t('common.premium') + ' ✦'}
                   </AppText>
@@ -112,7 +128,7 @@ export function ProfileScreen() {
           <TextInput
             defaultValue={profile?.name}
             onEndEditing={(e) => updateName(e.nativeEvent.text)}
-            style={styles.nameInput}
+            style={[styles.nameInput, { color: colors.ink }]}
             placeholderTextColor={colors.faint}
           />
         </View>
@@ -164,16 +180,14 @@ export function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.cream },
+  screen: { flex: 1 },
   content: { paddingHorizontal: 22, paddingBottom: 48 },
   pressed: { opacity: 0.8 },
   backCircle: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
@@ -181,7 +195,6 @@ const styles = StyleSheet.create({
   title: { marginTop: 14 },
   heroCard: {
     marginTop: 16,
-    backgroundColor: colors.emerald800,
     borderRadius: radii.cardLarge,
     paddingVertical: 18,
     paddingHorizontal: 20,
@@ -193,9 +206,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.goldTint20,
     borderWidth: 1.5,
-    borderColor: colors.goldBorder50,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
@@ -203,9 +214,7 @@ const styles = StyleSheet.create({
   heroInfo: { flex: 1 },
   badgeRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
   premiumChip: {
-    backgroundColor: colors.goldTint20,
     borderWidth: 1,
-    borderColor: colors.goldBorder50,
     borderRadius: radii.pill,
     paddingVertical: 2,
     paddingHorizontal: 9,
@@ -215,7 +224,6 @@ const styles = StyleSheet.create({
   nameInput: {
     fontFamily: fonts.regular,
     fontSize: 16,
-    color: colors.ink,
     paddingVertical: 0,
     marginTop: 6,
     textAlign: I18nManager.isRTL ? 'right' : 'left',

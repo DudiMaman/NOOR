@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Card, ListCard } from '../../components';
-import { colors, radii, shadows } from '../../theme';
+import { radii, shadows, useTheme, type Palette } from '../../theme';
 import { getArchive, getDailyHadith } from '../../content/hadith';
 import type { HadithItem } from '../../content/types';
 import { toHijri } from '../../services/hijri';
@@ -14,12 +14,14 @@ import { usePaywallGate } from '../../hooks/usePaywallGate';
 import { useContentStore } from '../../store/useContentStore';
 
 /** Archive category chip colors + labels per design 1o. */
-const CATEGORY_CHIP: Record<HadithItem['category'], { labelKey: string; color: string; bg: string }> = {
+const categoryChips = (
+  colors: Palette
+): Record<HadithItem['category'], { labelKey: string; color: string; bg: string }> => ({
   sunnah: { labelKey: 'content.catSunnah', color: colors.gold500, bg: colors.goldTint12 },
   virtue: { labelKey: 'content.catVirtue', color: colors.success, bg: 'rgba(91,138,114,0.12)' },
   ruling: { labelKey: 'content.catRuling', color: colors.goldDark, bg: 'rgba(138,116,64,0.12)' },
   dhikr: { labelKey: 'content.catDhikr', color: colors.emerald800, bg: colors.fill6 },
-};
+});
 
 /**
  * Daily content tab (design 1o) — hadith of the day with explanation,
@@ -27,6 +29,7 @@ const CATEGORY_CHIP: Record<HadithItem['category'], { labelKey: string; color: s
  */
 export function DailyContentScreen() {
   const { t } = useTranslation();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const gate = usePaywallGate();
   const scrollRef = useRef<ScrollView>(null);
@@ -53,7 +56,7 @@ export function DailyContentScreen() {
   };
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + 14 }]}>
+    <View style={[styles.screen, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}>
       <ScrollView
         ref={scrollRef}
         contentContainerStyle={styles.content}
@@ -86,13 +89,13 @@ export function DailyContentScreen() {
           <AppText size={13} color={colors.muted} style={{ marginTop: 10 }}>
             {activeItem.attribution}
           </AppText>
-          <View style={styles.heroHairline} />
+          <View style={[styles.heroHairline, { backgroundColor: colors.fill7 }]} />
           <AppText size={15} lineHeight={28} color={colors.inkBody}>
             {activeItem.explanation}
           </AppText>
           <View style={styles.tagsRow}>
             {[...activeItem.tags.slice(0, 2), t('content.readMinutes')].map((tag) => (
-              <View key={tag} style={styles.tagPill}>
+              <View key={tag} style={[styles.tagPill, { backgroundColor: colors.fill6 }]}>
                 <AppText weight="medium" size={12} color={colors.inkBody}>
                   {tag}
                 </AppText>
@@ -105,7 +108,11 @@ export function DailyContentScreen() {
         <View style={styles.actionsRow}>
           <Pressable
             onPress={() => gate(() => markDayRead(todayKey))}
-            style={({ pressed }) => [styles.readButton, pressed && styles.pressedDim]}
+            style={({ pressed }) => [
+              styles.readButton,
+              { backgroundColor: colors.emerald800 },
+              pressed && styles.pressedDim,
+            ]}
           >
             <AppText weight="semibold" size={15} color={colors.creamText}>
               {isRead ? t('content.markedRead') : t('content.markRead')}
@@ -117,24 +124,29 @@ export function DailyContentScreen() {
             onPress={() => gate(() => toggleSaved(activeItem.id))}
             style={({ pressed }) => [
               styles.circleButton,
-              isSaved && styles.circleButtonSaved,
+              { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+              isSaved && { backgroundColor: colors.gold100, borderColor: colors.gold500 },
               pressed && styles.pressedDim,
             ]}
           >
-            <View style={styles.bookmarkIcon}>
-              <View style={styles.bookmarkNotch} />
+            <View style={[styles.bookmarkIcon, { borderColor: colors.inkBody }]}>
+              <View style={[styles.bookmarkNotch, { borderTopColor: colors.inkBody }]} />
             </View>
           </Pressable>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('content.share')}
             onPress={() => gate(onShare)}
-            style={({ pressed }) => [styles.circleButton, pressed && styles.pressedDim]}
+            style={({ pressed }) => [
+              styles.circleButton,
+              { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+              pressed && styles.pressedDim,
+            ]}
           >
             <View style={styles.shareIcon}>
-              <View style={styles.shareDot} />
-              <View style={[styles.shareDot, { marginTop: -7 }]} />
-              <View style={styles.shareDot} />
+              <View style={[styles.shareDot, { backgroundColor: colors.inkBody }]} />
+              <View style={[styles.shareDot, { backgroundColor: colors.inkBody, marginTop: -7 }]} />
+              <View style={[styles.shareDot, { backgroundColor: colors.inkBody }]} />
             </View>
           </Pressable>
         </View>
@@ -150,7 +162,7 @@ export function DailyContentScreen() {
         </View>
         <ListCard style={{ borderRadius: radii.cardLarge }}>
           {archive.map(({ item, date }, index) => {
-            const chip = CATEGORY_CHIP[item.category];
+            const chip = categoryChips(colors)[item.category];
             return (
               <Pressable
                 key={dateKey(date)}
@@ -190,7 +202,6 @@ export function DailyContentScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
   },
   content: {
     paddingHorizontal: 22,
@@ -225,7 +236,6 @@ const styles = StyleSheet.create({
   },
   heroHairline: {
     height: 1,
-    backgroundColor: colors.fill7,
     marginVertical: 18,
   },
   tagsRow: {
@@ -235,7 +245,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   tagPill: {
-    backgroundColor: colors.fill6,
     borderRadius: 999,
     paddingVertical: 6,
     paddingHorizontal: 13,
@@ -249,7 +258,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     borderRadius: 24,
-    backgroundColor: colors.emerald800,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -259,22 +267,15 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: 'rgba(13,53,40,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  circleButtonSaved: {
-    backgroundColor: colors.gold100,
-    borderColor: colors.gold500,
   },
   bookmarkIcon: {
     width: 12,
     height: 15,
     borderWidth: 1.5,
     borderBottomWidth: 0,
-    borderColor: colors.inkBody,
     borderTopStartRadius: 2,
     borderTopEndRadius: 2,
   },
@@ -289,7 +290,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 5,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: colors.inkBody,
   },
   shareIcon: {
     flexDirection: 'row',
@@ -300,7 +300,6 @@ const styles = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: colors.inkBody,
   },
   archiveHeaderRow: {
     flexDirection: 'row',

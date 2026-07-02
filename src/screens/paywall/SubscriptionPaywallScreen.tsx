@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Card, DiamondBullet, PrimaryButton } from '../../components';
-import { colors, shadows } from '../../theme';
+import { shadows, useTheme } from '../../theme';
 import { useSubscriptionStore } from '../../store/useSubscriptionStore';
 import { getPlanPrices } from '../../services/currency';
 
@@ -28,6 +28,7 @@ export function SubscriptionPaywallScreen() {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
 
   const selectedPlan = useSubscriptionStore((s) => s.selectedPlan);
   const selectPlan = useSubscriptionStore((s) => s.selectPlan);
@@ -57,12 +58,13 @@ export function SubscriptionPaywallScreen() {
   };
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + 10 }]}>
+    <View style={[styles.screen, { backgroundColor: colors.cream, paddingTop: insets.top + 10 }]}>
       {/* Close */}
       <Pressable
         onPress={() => navigation.goBack()}
         style={({ pressed }) => [
           styles.close,
+          { backgroundColor: colors.card, borderColor: colors.hairline },
           { top: insets.top + 10, left: 22 },
           pressed && { opacity: 0.7 },
         ]}
@@ -98,7 +100,7 @@ export function SubscriptionPaywallScreen() {
 
       {/* Comparison table */}
       <Card padded={false} style={[styles.table, shadows.card]}>
-        <View style={styles.tableHeader}>
+        <View style={[styles.tableHeader, { backgroundColor: colors.fill4 }]}>
           <View style={{ flex: 1 }} />
           <AppText weight="bold" size={12.5} color={colors.muted} center style={styles.freeCol}>
             {t('common.free')}
@@ -109,7 +111,7 @@ export function SubscriptionPaywallScreen() {
         </View>
         {FEATURES.map((feature, index) => (
           <React.Fragment key={feature.key}>
-            {index > 0 && <View style={styles.rowSeparator} />}
+            {index > 0 && <View style={[styles.rowSeparator, { backgroundColor: colors.fill5 }]} />}
             <View style={styles.featureRow}>
               <AppText weight="medium" size={14} color={colors.ink} style={{ flex: 1 }}>
                 {t(`paywall.${feature.key}`)}
@@ -129,12 +131,14 @@ export function SubscriptionPaywallScreen() {
           onPress={() => selectPlan('yearly')}
           style={[
             styles.planCard,
-            { flex: 1.2 },
-            selectedPlan === 'yearly' ? styles.planSelected : styles.planIdle,
+            { backgroundColor: colors.card, flex: 1.2 },
+            selectedPlan === 'yearly'
+              ? [styles.planSelected, { borderColor: colors.gold500 }]
+              : [styles.planIdle, { borderColor: colors.hairlineStrong }],
             selectedPlan === 'yearly' && shadows.selectedCard,
           ]}
         >
-          <View style={styles.saveBadge}>
+          <View style={[styles.saveBadge, { backgroundColor: colors.gold500 }]}>
             <AppText weight="bold" size={10} color={colors.card}>
               {t('paywall.save50')}
             </AppText>
@@ -150,8 +154,10 @@ export function SubscriptionPaywallScreen() {
           onPress={() => selectPlan('monthly')}
           style={[
             styles.planCard,
-            { flex: 1 },
-            selectedPlan === 'monthly' ? styles.planSelected : styles.planIdle,
+            { backgroundColor: colors.card, flex: 1 },
+            selectedPlan === 'monthly'
+              ? [styles.planSelected, { borderColor: colors.gold500 }]
+              : [styles.planIdle, { borderColor: colors.hairlineStrong }],
             selectedPlan === 'monthly' && shadows.selectedCard,
           ]}
         >
@@ -185,16 +191,13 @@ export function SubscriptionPaywallScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
     paddingHorizontal: 22,
   },
   close: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairline,
     alignItems: 'center',
     justifyContent: 'center',
     // overlay at the physical top-left, mirroring the trial paywall's ✕
@@ -225,7 +228,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 13,
     paddingHorizontal: 18,
-    backgroundColor: colors.fill4,
     borderTopStartRadius: 23,
     borderTopEndRadius: 23,
   },
@@ -239,7 +241,6 @@ const styles = StyleSheet.create({
   premiumCol: { width: 84 },
   rowSeparator: {
     height: 1,
-    backgroundColor: colors.fill5,
     marginHorizontal: 18,
   },
   plansRow: {
@@ -248,24 +249,20 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   planCard: {
-    backgroundColor: colors.card,
     borderRadius: 18,
     paddingVertical: 13,
     paddingHorizontal: 15,
   },
   planIdle: {
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
   },
   planSelected: {
     borderWidth: 1.5,
-    borderColor: colors.gold500,
   },
   saveBadge: {
     position: 'absolute',
     top: -9,
     start: 14,
-    backgroundColor: colors.gold500,
     paddingVertical: 2,
     paddingHorizontal: 9,
     borderRadius: 999,

@@ -8,7 +8,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../navigation/types';
 import { AppText, Card, RadialGlow } from '../../components';
 import { PRAYER_GUIDES } from '../../content/prayerGuides';
-import { colors, gradients, radii, shadows } from '../../theme';
+import { gradients, lightColors, radii, shadows, useTheme } from '../../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PrayerGuide'>;
 
@@ -21,17 +21,22 @@ export function PrayerGuideScreen({ navigation, route }: Props) {
   const { prayer } = route.params;
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const guide = PRAYER_GUIDES[prayer];
 
   return (
-    <View style={[styles.root, { paddingTop: insets.top + 14 }]}>
+    <View style={[styles.root, { backgroundColor: colors.cream, paddingTop: insets.top + 14 }]}>
       {/* Back */}
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={t('common.back')}
         hitSlop={8}
         onPress={() => navigation.goBack()}
-        style={({ pressed }) => [styles.backCircle, pressed && styles.pressedDim]}
+        style={({ pressed }) => [
+          styles.backCircle,
+          { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+          pressed && styles.pressedDim,
+        ]}
       >
         <AppText weight="bold" size={17} color={colors.emerald800}>
           ›
@@ -68,14 +73,14 @@ export function PrayerGuideScreen({ navigation, route }: Props) {
       {(guide.sunnahBefore != null || guide.sunnahAfter != null) && (
         <View style={styles.chipsRow}>
           {guide.sunnahBefore != null && (
-            <View style={styles.chip}>
+            <View style={[styles.chip, { backgroundColor: colors.fill6 }]}>
               <AppText weight="medium" size={12} color={colors.inkBody}>
                 {`${t('reader.sunnahBefore')} · ${t('reader.rakaat', { count: guide.sunnahBefore })}`}
               </AppText>
             </View>
           )}
           {guide.sunnahAfter != null && (
-            <View style={styles.chip}>
+            <View style={[styles.chip, { backgroundColor: colors.fill6 }]}>
               <AppText weight="medium" size={12} color={colors.inkBody}>
                 {`${t('reader.sunnahAfter')} · ${t('reader.rakaat', { count: guide.sunnahAfter })}`}
               </AppText>
@@ -92,7 +97,7 @@ export function PrayerGuideScreen({ navigation, route }: Props) {
         {guide.steps.map((step, index) => (
           <Card key={`${guide.prayer}-${index}`} padded={false} style={styles.stepCard}>
             <View style={styles.diamondWrap}>
-              <View style={styles.diamond}>
+              <View style={[styles.diamond, { borderColor: colors.gold500 }]}>
                 <AppText weight="bold" size={12} color={colors.goldDark} style={styles.diamondNumber}>
                   {index + 1}
                 </AppText>
@@ -106,7 +111,12 @@ export function PrayerGuideScreen({ navigation, route }: Props) {
                 {step.body}
               </AppText>
               {step.recitation ? (
-                <View style={styles.recitation}>
+                <View
+                  style={[
+                    styles.recitation,
+                    { backgroundColor: colors.creamTint, borderStartColor: colors.gold500 },
+                  ]}
+                >
                   <AppText amiri size={19} lineHeight={36} color={colors.inkQuran}>
                     {step.recitation}
                   </AppText>
@@ -136,16 +146,13 @@ export function PrayerGuideScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.cream,
     paddingHorizontal: 20,
   },
   backCircle: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -179,7 +186,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   chip: {
-    backgroundColor: colors.fill6,
     borderRadius: radii.pill,
     paddingVertical: 6,
     paddingHorizontal: 13,
@@ -205,14 +211,14 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderWidth: 1.2,
-    borderColor: colors.gold500,
     transform: [{ rotate: '45deg' }],
     alignItems: 'center',
     justifyContent: 'center',
   },
   diamondNumber: { transform: [{ rotate: '-45deg' }] },
   afterPrayerCard: {
-    backgroundColor: colors.emerald800,
+    // Design-dark continuation card — keeps the emerald literal in both schemes.
+    backgroundColor: lightColors.emerald800,
     borderRadius: radii.cardLarge,
     paddingVertical: 20,
     paddingHorizontal: 18,
@@ -222,10 +228,8 @@ const styles = StyleSheet.create({
   stepText: { marginTop: 4 },
   recitation: {
     marginTop: 10,
-    backgroundColor: colors.creamTint,
     borderRadius: 14,
     padding: 14,
     borderStartWidth: 3,
-    borderStartColor: colors.gold500,
   },
 });
