@@ -1,13 +1,62 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
-import { AppText } from '../../components';
+import { AppText, SelectableCard } from '../../components';
+import { colors } from '../../theme';
+import { useUserStore, type AgeRange } from '../../store/useUserStore';
+import { QuizLayout } from './QuizLayout';
 
-// Placeholder — implemented by the screen build pass.
+const OPTIONS: AgeRange[] = ['under18', 'a18_24', 'a25_34', 'a35_44', 'a45_54', 'a55plus'];
+
+/** Quiz 2/4 — age range. */
 export function QuizAgeScreen() {
+  const { t } = useTranslation();
+  const navigation = useNavigation();
+  const quiz = useUserStore((s) => s.quiz);
+  const setQuiz = useUserStore((s) => s.setQuiz);
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6F3EC' }}>
-      <AppText>QuizAgeScreen</AppText>
-    </View>
+    <QuizLayout
+      step={2}
+      title={t('quiz.age.title')}
+      helper={t('quiz.age.subtitle')}
+      ctaDisabled={!quiz.ageRange}
+      onContinue={() => navigation.navigate('QuizGoals')}
+    >
+      <View style={styles.list}>
+        {OPTIONS.map((key) => {
+          const selected = quiz.ageRange === key;
+          return (
+            <SelectableCard
+              key={key}
+              selected={selected}
+              onPress={() => setQuiz({ ageRange: key })}
+              showCheck={selected}
+              style={styles.card}
+            >
+              <AppText
+                weight={selected ? 'bold' : 'semibold'}
+                size={16.5}
+                color={colors.ink}
+                style={styles.label}
+              >
+                {t(`quiz.age.${key}`)}
+              </AppText>
+            </SelectableCard>
+          );
+        })}
+      </View>
+    </QuizLayout>
   );
 }
+
+const styles = StyleSheet.create({
+  list: {
+    gap: 12,
+    marginTop: 32,
+  },
+  card: { paddingVertical: 17 },
+  label: { flexShrink: 1 },
+});
