@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { AppText, PrimaryButton, StarLogo } from '../../components';
 import { colors, fonts } from '../../theme';
 import { useUserStore } from '../../store/useUserStore';
+import { verifyUser } from '../../services/auth';
 import type { RootStackParamList } from '../../navigation/types';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -65,13 +66,20 @@ export function SignInScreen() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | undefined>(undefined);
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (!email.trim() || !password || !EMAIL_RE.test(email.trim())) {
       setError(t('auth.errorCredentials'));
       return;
     }
+    const result = await verifyUser(email, password);
+    if (!result.ok) {
+      setError(
+        result.error === 'notFound' ? t('auth.errorNotFound') : t('auth.errorWrongPassword')
+      );
+      return;
+    }
     setError(undefined);
-    signIn(email.trim());
+    signIn(result.email, result.name);
     setFlowStage('paywall');
     navigation.replace('TrialPaywall', { source: 'setup' });
   };

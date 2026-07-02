@@ -137,7 +137,10 @@
     "errorRequired": "请填写所有字段",
     "errorEmail": "请输入有效的电子邮箱",
     "errorPassword": "密码太短——至少 8 个字符",
-    "errorCredentials": "登录信息不正确"
+    "errorCredentials": "登录信息不正确",
+    "errorEmailExists": "该邮箱已注册 — 请直接登录",
+    "errorNotFound": "未找到使用该邮箱的账户",
+    "errorWrongPassword": "密码错误"
   },
   "paywall": {
     "trialBadge": "免费 3 天",

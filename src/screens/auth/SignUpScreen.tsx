@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { AppText, PrimaryButton, StarLogo } from '../../components';
 import { colors, fonts } from '../../theme';
 import { useUserStore } from '../../store/useUserStore';
+import { registerUser } from '../../services/auth';
 import type { RootStackParamList } from '../../navigation/types';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,7 +79,7 @@ export function SignUpScreen() {
     navigation.replace('TrialPaywall', { source: 'setup' });
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     const next: FormErrors = {};
     if (!name.trim()) next.name = t('auth.errorRequired');
     if (!email.trim()) next.email = t('auth.errorRequired');
@@ -88,7 +89,12 @@ export function SignUpScreen() {
     setErrors(next);
     if (next.name || next.email || next.password) return;
 
-    signUp(name.trim(), email.trim());
+    const result = await registerUser(name, email, password);
+    if (!result.ok) {
+      setErrors({ email: t('auth.errorEmailExists') });
+      return;
+    }
+    signUp(result.name, result.email);
     goToPaywall();
   };
 

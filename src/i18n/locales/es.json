@@ -137,7 +137,10 @@
     "errorRequired": "Por favor completa todos los campos",
     "errorEmail": "Por favor ingresa un correo válido",
     "errorPassword": "Contraseña muy corta — mínimo 8 caracteres",
-    "errorCredentials": "Credenciales incorrectas"
+    "errorCredentials": "Credenciales incorrectas",
+    "errorEmailExists": "Este correo ya está registrado — inicia sesión",
+    "errorNotFound": "No existe una cuenta con este correo",
+    "errorWrongPassword": "Contraseña incorrecta"
   },
   "paywall": {
     "trialBadge": "3 días gratis",

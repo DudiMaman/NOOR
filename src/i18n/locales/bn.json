@@ -137,7 +137,10 @@
     "errorRequired": "অনুগ্রহ করে সমস্ত ক্ষেত্র পূরণ করুন",
     "errorEmail": "অনুগ্রহ করে একটি বৈধ ইমেল প্রবেশ করুন",
     "errorPassword": "পাসওয়ার্ড খুব ছোট — কমপক্ষে 8 অক্ষর",
-    "errorCredentials": "লগইন তথ্য সঠিক নয়"
+    "errorCredentials": "লগইন তথ্য সঠিক নয়",
+    "errorEmailExists": "এই ইমেইল ইতিমধ্যে নিবন্ধিত — সাইন ইন করুন",
+    "errorNotFound": "এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি",
+    "errorWrongPassword": "ভুল পাসওয়ার্ড"
   },
   "paywall": {
     "trialBadge": "3 দিন বিনামূল্যে",

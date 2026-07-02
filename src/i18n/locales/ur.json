@@ -137,7 +137,10 @@
     "errorRequired": "براہ کرم تمام فیلڈز کو پُر کریں",
     "errorEmail": "براہ کرم ایک درست ای میل درج کریں",
     "errorPassword": "پاس ورڈ چھوٹا ہے — کم از کم 8 حروف",
-    "errorCredentials": "ڈیٹا درست نہیں ہے"
+    "errorCredentials": "ڈیٹا درست نہیں ہے",
+    "errorEmailExists": "یہ ای میل پہلے سے رجسٹرڈ ہے — لاگ اِن کریں",
+    "errorNotFound": "اس ای میل سے کوئی اکاؤنٹ نہیں ملا",
+    "errorWrongPassword": "پاس ورڈ غلط ہے"
   },
   "paywall": {
     "trialBadge": "3 دن مفت",

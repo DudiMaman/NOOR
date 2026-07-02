@@ -65,8 +65,14 @@ interface SettingsState {
   adhanSound: AdhanSoundKey;
   reminders: ReminderSettings;
   quranFontScale: number;
+  /** Selected reciter for Quran audio */
+  reciterId: string;
+  /** Expo push token (remote-push infrastructure; sending needs a backend) */
+  pushToken: string | null;
 
   setLanguage: (language: string) => void;
+  setReciterId: (reciterId: string) => void;
+  setPushToken: (pushToken: string | null) => void;
   dismissLanguagePrompt: () => void;
   setAppearance: (appearance: AppearanceKey) => void;
   setLocation: (location: AppLocation) => void;
@@ -90,8 +96,12 @@ export const useSettingsStore = create<SettingsState>()(
       adhanSound: 'makkah',
       reminders: defaultReminders,
       quranFontScale: 1,
+      reciterId: 'afasy',
+      pushToken: null,
 
       setLanguage: (language) => set({ language }),
+      setReciterId: (reciterId) => set({ reciterId }),
+      setPushToken: (pushToken) => set({ pushToken }),
       dismissLanguagePrompt: () => set({ languagePromptDismissed: true }),
       setAppearance: (appearance) => set({ appearance }),
       setLocation: (location) => set({ location }),

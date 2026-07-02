@@ -33,7 +33,7 @@ interface UserState {
   setQuiz: (patch: Partial<QuizAnswers>) => void;
   toggleGoal: (goal: Goal) => void;
   signUp: (name: string, email: string) => void;
-  signIn: (email: string) => void;
+  signIn: (email: string, name?: string) => void;
   continueAsGuest: () => void;
   signOut: () => void;
   updateName: (name: string) => void;
@@ -59,10 +59,10 @@ export const useUserStore = create<UserState>()(
         })),
       signUp: (name, email) =>
         set({ profile: { name, email, isGuest: false, createdAt: Date.now() } }),
-      signIn: (email) =>
+      signIn: (email, name) =>
         set({
           profile: {
-            name: email.split('@')[0],
+            name: name || email.split('@')[0],
             email,
             isGuest: false,
             createdAt: Date.now(),

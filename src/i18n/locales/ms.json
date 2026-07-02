@@ -137,7 +137,10 @@
     "errorRequired": "Sila isi semua medan",
     "errorEmail": "Sila masukkan email yang sah",
     "errorPassword": "Kata laluan terlalu pendek — sekurang-kurangnya 8 aksara",
-    "errorCredentials": "Kelayakan tidak sah"
+    "errorCredentials": "Kelayakan tidak sah",
+    "errorEmailExists": "E-mel ini telah didaftarkan — sila log masuk",
+    "errorNotFound": "Tiada akaun dengan e-mel ini",
+    "errorWrongPassword": "Kata laluan salah"
   },
   "paywall": {
     "trialBadge": "3 hari percuma",

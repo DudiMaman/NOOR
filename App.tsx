@@ -20,24 +20,31 @@ import { useTranslation } from 'react-i18next';
 import { initI18n } from './src/i18n';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { LanguageSuggestionSheet } from './src/components';
-import { colors } from './src/theme';
+import { darkColors, lightColors, ThemeProvider, useTheme } from './src/theme';
 import { useSettingsStore } from './src/store/useSettingsStore';
 import { useSubscriptionStore } from './src/store/useSubscriptionStore';
 import { useUserStore } from './src/store/useUserStore';
 import { useContentStore } from './src/store/useContentStore';
 import { rescheduleAll } from './src/services/notifications';
+import { registerForPushToken } from './src/services/pushToken';
 
 SplashScreenNative.preventAutoHideAsync().catch(() => {});
 
-const navTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: colors.cream,
-    primary: colors.emerald800,
-    text: colors.ink,
-  },
-};
+function makeNavTheme(scheme: 'light' | 'dark') {
+  const palette = scheme === 'dark' ? darkColors : lightColors;
+  return {
+    ...DefaultTheme,
+    dark: scheme === 'dark',
+    colors: {
+      ...DefaultTheme.colors,
+      background: palette.cream,
+      card: palette.card,
+      primary: palette.emerald800,
+      text: palette.ink,
+      border: palette.hairline,
+    },
+  };
+}
 
 /** Wait for zustand/AsyncStorage rehydration before rendering navigation. */
 function useStoresHydrated(): boolean {
@@ -90,8 +97,16 @@ function AppInner() {
     rescheduleAll({ t, location, calcMethod, madhhab, reminders, trialEndsAt }).catch(() => {});
   }, [t, location, calcMethod, madhhab, reminders, trialEndsAt]);
 
+  // Remote-push infrastructure: register the device token once (no-op on
+  // simulators or until an EAS project is configured).
+  const setPushToken = useSettingsStore((s) => s.setPushToken);
+  useEffect(() => {
+    registerForPushToken().then((token) => token && setPushToken(token));
+  }, [setPushToken]);
+
+  const { scheme } = useTheme();
   return (
-    <NavigationContainer theme={navTheme}>
+    <NavigationContainer theme={makeNavTheme(scheme)}>
       <StatusBar style="light" />
       <RootNavigator />
       <LanguageSuggestionSheet />
@@ -121,7 +136,9 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <AppInner />
+        <ThemeProvider>
+          <AppInner />
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

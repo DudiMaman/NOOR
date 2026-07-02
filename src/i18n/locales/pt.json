@@ -137,7 +137,10 @@
     "errorRequired": "Por favor, preencha todos os campos",
     "errorEmail": "Por favor, insira um e-mail válido",
     "errorPassword": "Senha muito curta — pelo menos 8 caracteres",
-    "errorCredentials": "Credenciais incorretas"
+    "errorCredentials": "Credenciais incorretas",
+    "errorEmailExists": "Este e-mail já está registrado — faça login",
+    "errorNotFound": "Nenhuma conta encontrada para este e-mail",
+    "errorWrongPassword": "Senha incorreta"
   },
   "paywall": {
     "trialBadge": "3 dias grátis",

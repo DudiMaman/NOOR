@@ -137,7 +137,10 @@
     "errorRequired": "يرجى تعبئة جميع الحقول",
     "errorEmail": "يرجى إدخال بريد إلكتروني صحيح",
     "errorPassword": "كلمة المرور قصيرة — 8 أحرف على الأقل",
-    "errorCredentials": "بيانات الدخول غير صحيحة"
+    "errorCredentials": "بيانات الدخول غير صحيحة",
+    "errorEmailExists": "هذا البريد مسجّل مسبقًا — سجّل الدخول بدلًا من ذلك",
+    "errorNotFound": "لا يوجد حساب بهذا البريد الإلكتروني",
+    "errorWrongPassword": "كلمة المرور غير صحيحة"
   },
   "paywall": {
     "trialBadge": "3 أيام مجانًا",

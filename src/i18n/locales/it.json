@@ -137,7 +137,10 @@
     "errorRequired": "Riempi tutti i campi",
     "errorEmail": "Inserisci un'email valida",
     "errorPassword": "Password troppo corta — almeno 8 caratteri",
-    "errorCredentials": "Credenziali non corrette"
+    "errorCredentials": "Credenziali non corrette",
+    "errorEmailExists": "Questa email è già registrata — accedi",
+    "errorNotFound": "Nessun account trovato per questa email",
+    "errorWrongPassword": "Password errata"
   },
   "paywall": {
     "trialBadge": "3 giorni gratis",

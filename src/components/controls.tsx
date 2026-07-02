@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import { AppText } from './AppText';
-import { colors } from '../theme';
+import { useTheme } from '../theme';
 
 /**
  * iOS-style toggle — 50×30 track with 25px white knob by default (design 1p);
@@ -21,6 +21,7 @@ export function IOSToggle({
   width?: number;
   height?: number;
 }) {
+  const { colors } = useTheme();
   const onColor = goldWhenOn ? 'rgba(196,164,95,0.9)' : colors.emerald800;
   const knob = height - 5;
   return (
@@ -58,8 +59,16 @@ export function SegmentedControl<T extends string>({
   compact?: boolean;
   style?: ViewStyle;
 }) {
+  const { colors } = useTheme();
   return (
-    <View style={[styles.segmentTrack, compact && styles.segmentTrackCompact, style]}>
+    <View
+      style={[
+        styles.segmentTrack,
+        { backgroundColor: colors.fill6 },
+        compact && styles.segmentTrackCompact,
+        style,
+      ]}
+    >
       {options.map((option) => {
         const active = option.value === value;
         return (
@@ -69,13 +78,13 @@ export function SegmentedControl<T extends string>({
             style={[
               styles.segment,
               compact && styles.segmentCompact,
-              active && styles.segmentActive,
+              active && [styles.segmentActive, { backgroundColor: colors.card }],
             ]}
           >
             <AppText
               size={compact ? 12.5 : 14}
               weight={active ? 'bold' : 'medium'}
-              color={active ? colors.emerald800 : colors.muted}
+              color={active ? colors.ink : colors.muted}
             >
               {option.label}
             </AppText>
@@ -88,6 +97,7 @@ export function SegmentedControl<T extends string>({
 
 /** 22px emerald check circle used on selected cards. */
 export function CheckCircle({ checked = true, size = 22 }: { checked?: boolean; size?: number }) {
+  const { colors } = useTheme();
   if (!checked) {
     return (
       <View
@@ -123,8 +133,8 @@ export function CheckCircle({ checked = true, size = 22 }: { checked?: boolean; 
 export function ProgressBar({
   progress,
   height = 5,
-  trackColor = colors.fill10,
-  fillColor = colors.gold500,
+  trackColor,
+  fillColor,
   style,
 }: {
   /** 0..1 */
@@ -134,14 +144,25 @@ export function ProgressBar({
   fillColor?: string;
   style?: ViewStyle;
 }) {
+  const { colors } = useTheme();
   return (
-    <View style={[{ height, borderRadius: height / 2, backgroundColor: trackColor, overflow: 'hidden' }, style]}>
+    <View
+      style={[
+        {
+          height,
+          borderRadius: height / 2,
+          backgroundColor: trackColor ?? colors.fill10,
+          overflow: 'hidden',
+        },
+        style,
+      ]}
+    >
       <View
         style={{
           width: `${Math.min(100, Math.max(0, progress * 100))}%`,
           height: '100%',
           borderRadius: height / 2,
-          backgroundColor: fillColor,
+          backgroundColor: fillColor ?? colors.gold500,
         }}
       />
     </View>
@@ -172,7 +193,6 @@ const styles = StyleSheet.create({
   knobOff: { alignSelf: 'flex-start' },
   segmentTrack: {
     flexDirection: 'row',
-    backgroundColor: colors.fill6,
     borderRadius: 14,
     padding: 4,
   },
@@ -185,7 +205,6 @@ const styles = StyleSheet.create({
   },
   segmentCompact: { flex: 0, paddingHorizontal: 13, paddingVertical: 5, borderRadius: 8 },
   segmentActive: {
-    backgroundColor: '#fff',
     shadowColor: '#0D3528',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

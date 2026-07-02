@@ -137,7 +137,10 @@
     "errorRequired": "Bitte fülle alle Felder aus",
     "errorEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
     "errorPassword": "Passwort zu kurz — mindestens 8 Zeichen erforderlich",
-    "errorCredentials": "Anmeldedaten ungültig"
+    "errorCredentials": "Anmeldedaten ungültig",
+    "errorEmailExists": "Diese E-Mail ist bereits registriert — melde dich an",
+    "errorNotFound": "Kein Konto mit dieser E-Mail gefunden",
+    "errorWrongPassword": "Falsches Passwort"
   },
   "paywall": {
     "trialBadge": "3 Tage kostenlos",

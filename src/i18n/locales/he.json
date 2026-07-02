@@ -137,7 +137,10 @@
     "errorRequired": "אנא מלא את כל השדות",
     "errorEmail": "אנא הזן דואר אלקטרוני תקף",
     "errorPassword": "סיסמה קצרה מדי — לפחות 8 תווים",
-    "errorCredentials": "פרטי כניסה שגויים"
+    "errorCredentials": "פרטי כניסה שגויים",
+    "errorEmailExists": "האימייל הזה כבר רשום — התחבר במקום",
+    "errorNotFound": "לא נמצא חשבון עם האימייל הזה",
+    "errorWrongPassword": "סיסמה שגויה"
   },
   "paywall": {
     "trialBadge": "3 ימים חינם",

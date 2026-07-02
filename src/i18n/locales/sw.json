@@ -137,7 +137,10 @@
     "errorRequired": "Tafadhali jaza nyanja zote",
     "errorEmail": "Tafadhali ingiza barua pepe sahihi",
     "errorPassword": "Neno la siri ni fupi — angalau herufi 8",
-    "errorCredentials": "Ujumbe wa kuingia si sahihi"
+    "errorCredentials": "Ujumbe wa kuingia si sahihi",
+    "errorEmailExists": "Barua pepe hii tayari imesajiliwa — ingia",
+    "errorNotFound": "Hakuna akaunti kwa barua pepe hii",
+    "errorWrongPassword": "Nenosiri si sahihi"
   },
   "paywall": {
     "trialBadge": "Siku 3 bure",

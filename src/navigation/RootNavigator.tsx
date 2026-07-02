@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import type { RootStackParamList } from './types';
 import { MainTabs } from './MainTabs';
-import { colors } from '../theme';
+import { useTheme } from '../theme';
 
 import { SplashScreen } from '../screens/SplashScreen';
 import { OnboardingScreen } from '../screens/onboarding/OnboardingScreen';
@@ -27,6 +27,7 @@ import { LanguagePickerScreen } from '../screens/settings/LanguagePickerScreen';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
+  const { colors } = useTheme();
   return (
     <Stack.Navigator
       initialRouteName="Splash"

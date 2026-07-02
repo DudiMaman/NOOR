@@ -137,7 +137,10 @@
     "errorRequired": "कृपया सभी फ़ील्ड भरें",
     "errorEmail": "कृपया एक वैध ईमेल दर्ज करें",
     "errorPassword": "पासवर्ड बहुत छोटा है — कम से कम 8 वर्ण",
-    "errorCredentials": "गलत जानकारी"
+    "errorCredentials": "गलत जानकारी",
+    "errorEmailExists": "यह ईमेल पहले से पंजीकृत है — साइन इन करें",
+    "errorNotFound": "इस ईमेल से कोई खाता नहीं मिला",
+    "errorWrongPassword": "गलत पासवर्ड"
   },
   "paywall": {
     "trialBadge": "3 दिन मुफ़्त",

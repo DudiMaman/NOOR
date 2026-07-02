@@ -137,7 +137,10 @@
     "errorRequired": "すべてのフィールドに入力してください",
     "errorEmail": "有効なメールアドレスを入力してください",
     "errorPassword": "パスワードが短すぎます — 8文字以上にしてください",
-    "errorCredentials": "ログイン情報が正しくありません"
+    "errorCredentials": "ログイン情報が正しくありません",
+    "errorEmailExists": "このメールは登録済みです — ログインしてください",
+    "errorNotFound": "このメールのアカウントが見つかりません",
+    "errorWrongPassword": "パスワードが違います"
   },
   "paywall": {
     "trialBadge": "3日間無料",

@@ -137,7 +137,10 @@
     "errorRequired": "لطفاً تمام فیلدها را پر کنید",
     "errorEmail": "لطفاً ایمیل معتبر وارد کنید",
     "errorPassword": "گذرواژه کوتاه است — حداقل 8 کاراکتر",
-    "errorCredentials": "اطلاعات ورود نادرست است"
+    "errorCredentials": "اطلاعات ورود نادرست است",
+    "errorEmailExists": "این ایمیل قبلاً ثبت شده — وارد شوید",
+    "errorNotFound": "حسابی با این ایمیل یافت نشد",
+    "errorWrongPassword": "رمز عبور اشتباه است"
   },
   "paywall": {
     "trialBadge": "3 روز رایگان",

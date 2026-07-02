@@ -137,7 +137,10 @@
     "errorRequired": "모든 항목을 작성해주세요",
     "errorEmail": "올바른 이메일을 입력해주세요",
     "errorPassword": "비밀번호가 너무 짧아요—최소 8자 필요",
-    "errorCredentials": "로그인 정보가 올바르지 않아요"
+    "errorCredentials": "로그인 정보가 올바르지 않아요",
+    "errorEmailExists": "이미 등록된 이메일입니다 — 로그인해 주세요",
+    "errorNotFound": "이 이메일로 된 계정을 찾을 수 없습니다",
+    "errorWrongPassword": "비밀번호가 올바르지 않습니다"
   },
   "paywall": {
     "trialBadge": "3일 무료",

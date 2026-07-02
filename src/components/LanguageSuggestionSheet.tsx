@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { AppText } from './AppText';
 import { PrimaryButton } from './buttons';
 import { StarLogo } from './StarLogo';
-import { colors, radii, shadows } from '../theme';
+import { radii, shadows, useTheme } from '../theme';
 import { changeAppLanguage, getDeviceLanguage } from '../i18n';
 import { DEFAULT_LANGUAGE, getLanguageMeta } from '../i18n/languages';
 import { useSettingsStore } from '../store/useSettingsStore';
@@ -16,6 +16,7 @@ import { useSettingsStore } from '../store/useSettingsStore';
  * and the user hasn't decided before, offer to switch or stay in Arabic.
  */
 export function LanguageSuggestionSheet() {
+  const { colors } = useTheme();
   const { t, i18n } = useTranslation();
   const dismissed = useSettingsStore((s) => s.languagePromptDismissed);
   const dismiss = useSettingsStore((s) => s.dismissLanguagePrompt);
@@ -59,8 +60,8 @@ export function LanguageSuggestionSheet() {
     <Modal visible={visible} transparent animationType="slide" onRequestClose={stay}>
       <View style={styles.backdrop}>
         <Pressable style={StyleSheet.absoluteFill} onPress={stay} />
-        <View style={[styles.sheet, shadows.sheet]}>
-          <View style={styles.grabber} />
+        <View style={[styles.sheet, { backgroundColor: colors.cream }, shadows.sheet]}>
+          <View style={[styles.grabber, { backgroundColor: colors.trackOff }]} />
           <StarLogo size={34} dotSize={7} style={{ alignSelf: 'center' }} />
           <AppText weight="bold" size={20} center style={{ marginTop: 12 }}>
             {t('languagePrompt.title', { language: languageLabel })}
@@ -75,8 +76,15 @@ export function LanguageSuggestionSheet() {
               height={50}
               style={{ flex: 1 }}
             />
-            <Pressable onPress={stay} style={({ pressed }) => [styles.stayButton, pressed && { opacity: 0.8 }]}>
-              <AppText weight="semibold" size={15} color={colors.emerald800}>
+            <Pressable
+              onPress={stay}
+              style={({ pressed }) => [
+                styles.stayButton,
+                { borderColor: colors.trackOff },
+                pressed && { opacity: 0.8 },
+              ]}
+            >
+              <AppText weight="semibold" size={15} color={colors.ink}>
                 {i18n.getFixedT(DEFAULT_LANGUAGE)('languagePrompt.stay')}
               </AppText>
             </Pressable>
@@ -94,7 +102,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(6,30,22,0.55)',
   },
   sheet: {
-    backgroundColor: colors.cream,
     borderTopStartRadius: radii.sheet,
     borderTopEndRadius: radii.sheet,
     paddingHorizontal: 26,
@@ -106,7 +113,6 @@ const styles = StyleSheet.create({
     width: 44,
     height: 5,
     borderRadius: 3,
-    backgroundColor: colors.trackOff,
     marginBottom: 18,
   },
   buttonsRow: {
@@ -122,6 +128,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: 'rgba(13,53,40,0.25)',
   },
 });

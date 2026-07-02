@@ -137,7 +137,10 @@
     "errorRequired": "Harap isi semua kolom",
     "errorEmail": "Harap masukkan email yang valid",
     "errorPassword": "Kata sandi terlalu pendek — minimal 8 karakter",
-    "errorCredentials": "Kredensial tidak benar"
+    "errorCredentials": "Kredensial tidak benar",
+    "errorEmailExists": "Email ini sudah terdaftar — silakan masuk",
+    "errorNotFound": "Tidak ada akun dengan email ini",
+    "errorWrongPassword": "Kata sandi salah"
   },
   "paywall": {
     "trialBadge": "3 hari gratis",

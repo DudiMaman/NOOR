@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import type { MainTabsParamList } from './types';
 import { AppText } from '../components';
-import { colors } from '../theme';
+import { useTheme } from '../theme';
 import { useIsPremium } from '../store/useSubscriptionStore';
 
 import { HomeScreen } from '../screens/main/HomeScreen';
@@ -27,6 +27,7 @@ const Tab = createBottomTabNavigator<MainTabsParamList>();
 const FREE_TABS: (keyof MainTabsParamList)[] = ['Home', 'Settings'];
 
 function TabIcon({ route, active }: { route: keyof MainTabsParamList; active: boolean }) {
+  const { colors } = useTheme();
   const tint = active ? colors.emerald800 : colors.ink;
   switch (route) {
     case 'Home':
@@ -35,7 +36,7 @@ function TabIcon({ route, active }: { route: keyof MainTabsParamList; active: bo
           style={{
             width: 11,
             height: 11,
-            backgroundColor: active ? colors.emerald800 : 'transparent',
+            backgroundColor: active ? tint : 'transparent',
             borderWidth: active ? 0 : 1.5,
             borderColor: tint,
             transform: [{ rotate: '45deg' }],
@@ -76,6 +77,7 @@ function TabIcon({ route, active }: { route: keyof MainTabsParamList; active: bo
 }
 
 function NoorTabBar({ state, navigation }: BottomTabBarProps) {
+  const { colors, scheme } = useTheme();
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const isPremium = useIsPremium();
@@ -88,8 +90,16 @@ function NoorTabBar({ state, navigation }: BottomTabBarProps) {
     Settings: t('tabs.settings'),
   };
 
+  const barBg = scheme === 'dark' ? 'rgba(11,29,22,0.92)' : 'rgba(246,243,236,0.92)';
   return (
-    <BlurView intensity={40} tint="light" style={[styles.tabBar, { paddingBottom: Math.max(insets.bottom, 14) }]}>
+    <BlurView
+      intensity={40}
+      tint={scheme === 'dark' ? 'dark' : 'light'}
+      style={[
+        styles.tabBar,
+        { paddingBottom: Math.max(insets.bottom, 14), backgroundColor: barBg, borderTopColor: colors.hairline },
+      ]}
+    >
       {state.routes.map((route, index) => {
         const routeName = route.name as keyof MainTabsParamList;
         const active = state.index === index;
@@ -119,6 +129,7 @@ function NoorTabBar({ state, navigation }: BottomTabBarProps) {
 }
 
 export function MainTabs() {
+  const { colors } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: colors.cream } }}
@@ -139,9 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 26,
     paddingTop: 10,
-    backgroundColor: 'rgba(246,243,236,0.92)',
     borderTopWidth: 1,
-    borderTopColor: colors.hairline,
     position: 'absolute',
     bottom: 0,
     left: 0,

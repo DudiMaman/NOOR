@@ -137,7 +137,10 @@
     "errorRequired": "Lütfen tüm alanları doldurun",
     "errorEmail": "Lütfen geçerli bir e-posta girin",
     "errorPassword": "Şifre çok kısa — en az 8 karakter gerekli",
-    "errorCredentials": "Giriş bilgileri yanlış"
+    "errorCredentials": "Giriş bilgileri yanlış",
+    "errorEmailExists": "Bu e-posta zaten kayıtlı — giriş yapın",
+    "errorNotFound": "Bu e-postayla bir hesap bulunamadı",
+    "errorWrongPassword": "Şifre hatalı"
   },
   "paywall": {
     "trialBadge": "3 gün ücretsiz",

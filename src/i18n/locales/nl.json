@@ -137,7 +137,10 @@
     "errorRequired": "Vul alstublieft alle velden in",
     "errorEmail": "Voer alstublieft een geldig e-mailadres in",
     "errorPassword": "Wachtwoord te kort — minstens 8 tekens",
-    "errorCredentials": "Inloggegevens niet correct"
+    "errorCredentials": "Inloggegevens niet correct",
+    "errorEmailExists": "Dit e-mailadres is al geregistreerd — log in",
+    "errorNotFound": "Geen account gevonden voor dit e-mailadres",
+    "errorWrongPassword": "Onjuist wachtwoord"
   },
   "paywall": {
     "trialBadge": "3 dagen gratis",

@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'rea
 
 import { AppText } from './AppText';
 import { CheckCircle } from './controls';
-import { colors, radii, shadows } from '../theme';
+import { radii, shadows, useTheme } from '../theme';
 
 /** Plain white card with hairline border. */
 export function Card({
@@ -12,8 +12,18 @@ export function Card({
   onPress,
   padded = true,
 }: PropsWithChildren<{ style?: StyleProp<ViewStyle>; onPress?: () => void; padded?: boolean }>) {
+  const { colors } = useTheme();
   const content = (
-    <View style={[styles.card, padded && styles.cardPadding, style]}>{children}</View>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: colors.card, borderColor: colors.hairline },
+        padded && styles.cardPadding,
+        style,
+      ]}
+    >
+      {children}
+    </View>
   );
   if (!onPress) return content;
   return (
@@ -28,13 +38,22 @@ export function ListCard({
   children,
   style,
 }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>) {
+  const { colors } = useTheme();
   const items = React.Children.toArray(children);
   return (
-    <View style={[styles.card, { overflow: 'hidden' }, style]}>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: colors.card, borderColor: colors.hairline, overflow: 'hidden' },
+        style,
+      ]}
+    >
       {items.map((child, index) => (
         <React.Fragment key={index}>
           {child}
-          {index < items.length - 1 && <View style={styles.separator} />}
+          {index < items.length - 1 && (
+            <View style={[styles.separator, { backgroundColor: colors.separator }]} />
+          )}
         </React.Fragment>
       ))}
     </View>
@@ -60,12 +79,15 @@ export function SelectableCard({
   checkPosition?: 'end' | 'corner' | 'none';
   style?: StyleProp<ViewStyle>;
 }>) {
+  const { colors } = useTheme();
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [
         styles.selectable,
-        selected ? styles.selectableSelected : styles.selectableIdle,
+        selected
+          ? [styles.selectableSelected, { backgroundColor: colors.creamTint, borderColor: colors.gold500 }]
+          : [styles.selectableIdle, { backgroundColor: colors.card, borderColor: colors.fill8 }],
         selected && shadows.selectedCard,
         pressed && { opacity: 0.9 },
         style,
@@ -90,6 +112,7 @@ export function IconChip({
   gold = false,
   style,
 }: PropsWithChildren<{ size?: number; dark?: boolean; gold?: boolean; style?: StyleProp<ViewStyle> }>) {
+  const { colors } = useTheme();
   return (
     <View
       style={[
@@ -112,6 +135,7 @@ export function IconChip({
 
 /** Section label above grouped cards — "الصلوات". */
 export function SectionLabel({ children, style }: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>) {
+  const { colors } = useTheme();
   return (
     <AppText
       weight="bold"
@@ -126,6 +150,7 @@ export function SectionLabel({ children, style }: PropsWithChildren<{ style?: St
 
 /** Kicker row: small gold star outline + gold bold label. */
 export function KickerLabel({ label }: { label: string }) {
+  const { colors } = useTheme();
   return (
     <View style={styles.kickerRow}>
       <View style={styles.kickerStar}>
@@ -141,15 +166,12 @@ export function KickerLabel({ label }: { label: string }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.card,
     borderRadius: radii.card,
     borderWidth: 1,
-    borderColor: colors.hairline,
   },
   cardPadding: { paddingHorizontal: 18, paddingVertical: 15 },
   separator: {
     height: 1,
-    backgroundColor: colors.separator,
     marginHorizontal: 18,
   },
   selectable: {
@@ -161,14 +183,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   selectableIdle: {
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.fill8,
   },
   selectableSelected: {
-    backgroundColor: colors.creamTint,
     borderWidth: 1.5,
-    borderColor: colors.gold500,
   },
   cornerCheck: { position: 'absolute', top: 12, left: 12, zIndex: 2 },
   kickerRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
@@ -178,6 +196,6 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderWidth: 1.2,
-    borderColor: colors.gold500,
+    borderColor: '#C4A45F',
   },
 });

@@ -1,5 +1,7 @@
 export { colors, gradients, shadows } from './colors';
 export { fonts, typography } from './typography';
+export { lightColors, darkColors, type Palette } from './palettes';
+export { ThemeProvider, useTheme, type Theme } from './ThemeContext';
 
 /** Shape tokens */
 export const radii = {

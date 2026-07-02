@@ -137,7 +137,10 @@
     "errorRequired": "Veuillez remplir tous les champs",
     "errorEmail": "Veuillez entrer une adresse e-mail valide",
     "errorPassword": "Le mot de passe est trop court — au moins 8 caractères",
-    "errorCredentials": "Les identifiants sont incorrects"
+    "errorCredentials": "Les identifiants sont incorrects",
+    "errorEmailExists": "Cet e-mail est déjà enregistré — connectez-vous",
+    "errorNotFound": "Aucun compte trouvé pour cet e-mail",
+    "errorWrongPassword": "Mot de passe incorrect"
   },
   "paywall": {
     "trialBadge": "3 jours gratuits",

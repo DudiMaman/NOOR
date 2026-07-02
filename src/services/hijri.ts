@@ -1,8 +1,12 @@
+import umalqura from '@umalqura/core';
+
 /**
- * Hijri (Islamic) calendar conversion — tabular calendar (astronomical
- * epoch, "Kuwaiti algorithm"). Accurate within ±1 day of Umm al-Qura;
- * good enough for display and occasion countdowns. Swap for an Umm al-Qura
- * table if day-exact official dates are required.
+ * Hijri (Islamic) calendar conversion.
+ *
+ * Primary: the official Umm al-Qura calendar via @umalqura/core (day-exact,
+ * covers 1318–1500 AH ≈ 1900–2077 CE). Outside that window we fall back to
+ * the astronomical tabular calendar (±1 day), which is also kept as a safety
+ * net if the table lookup ever throws.
  */
 export interface HijriDate {
   year: number;
@@ -11,6 +15,9 @@ export interface HijriDate {
   /** 1..30 */
   day: number;
 }
+
+const UMALQURA_MIN = umalqura.min.date.getTime();
+const UMALQURA_MAX = umalqura.max.date.getTime();
 
 // Julian day of 1 Muharram 1 AH — astronomical epoch (15 July 622).
 // Verified against Umm al-Qura anchors: 2026-07-02 → 17 Muharram 1448,
@@ -49,6 +56,32 @@ function julianDayToGregorian(jd: number): { year: number; month: number; day: n
 }
 
 export function toHijri(date: Date): HijriDate {
+  const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  if (dayStart.getTime() >= UMALQURA_MIN && dayStart.getTime() <= UMALQURA_MAX) {
+    try {
+      const u = umalqura(dayStart);
+      return { year: u.hy, month: u.hm, day: u.hd };
+    } catch {
+      // fall through to the tabular calculation
+    }
+  }
+  return toHijriTabular(date);
+}
+
+export function hijriToGregorian(hijri: HijriDate): Date {
+  try {
+    const u = umalqura(hijri.year, hijri.month, hijri.day);
+    const g = u.date;
+    if (g.getTime() >= UMALQURA_MIN && g.getTime() <= UMALQURA_MAX) {
+      return new Date(g.getFullYear(), g.getMonth(), g.getDate());
+    }
+  } catch {
+    // fall through to the tabular calculation
+  }
+  return hijriToGregorianTabular(hijri);
+}
+
+function toHijriTabular(date: Date): HijriDate {
   const jd = gregorianToJulianDay(date.getFullYear(), date.getMonth() + 1, date.getDate());
   const days = Math.floor(jd - ISLAMIC_EPOCH);
   const year = Math.floor((30 * days + 10646) / 10631);
@@ -69,7 +102,7 @@ export function toHijri(date: Date): HijriDate {
   return { year, month, day };
 }
 
-export function hijriToGregorian(hijri: HijriDate): Date {
+function hijriToGregorianTabular(hijri: HijriDate): Date {
   const days =
     Math.ceil(29.5 * (hijri.month - 1)) +
     (hijri.year - 1) * 354 +

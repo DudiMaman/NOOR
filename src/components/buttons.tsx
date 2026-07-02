@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import { AppText } from './AppText';
 import { Shimmer } from './Shimmer';
-import { colors, gradients, shadows } from '../theme';
+import { gradients, shadows, useTheme } from '../theme';
 
 interface CtaProps {
   label: string;
@@ -31,6 +31,7 @@ export function PrimaryButton({
   labelWeight = 'bold',
   style,
 }: CtaProps) {
+  const { colors } = useTheme();
   return (
     <Pressable
       onPress={onPress}
@@ -78,6 +79,7 @@ export function GoldButton({
   height = 56,
   style,
 }: CtaProps) {
+  const { colors } = useTheme();
   return (
     <Pressable onPress={onPress} disabled={disabled} style={({ pressed }) => [{ opacity: pressed ? 0.92 : 1 }, style]}>
       <LinearGradient

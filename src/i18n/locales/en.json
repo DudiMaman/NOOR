@@ -137,7 +137,10 @@
     "errorRequired": "Please fill in all fields",
     "errorEmail": "Please enter a valid email",
     "errorPassword": "Password too short — at least 8 characters",
-    "errorCredentials": "Incorrect credentials"
+    "errorCredentials": "Incorrect credentials",
+    "errorEmailExists": "This email is already registered — sign in instead",
+    "errorNotFound": "No account found for this email",
+    "errorWrongPassword": "Incorrect password"
   },
   "paywall": {
     "trialBadge": "3 days free",

@@ -26,8 +26,13 @@ export function QuizReligiosityScreen() {
       ctaLabel={t('quiz.finish')}
       ctaDisabled={!quiz.religiosity}
       onContinue={() => {
-        setFlowStage('auth');
-        navigation.navigate('AuthSignUp');
+        if (useUserStore.getState().profile) {
+          setFlowStage('main');
+          navigation.reset({ index: 0, routes: [{ name: 'Main' as never }] });
+        } else {
+          setFlowStage('auth');
+          navigation.navigate('AuthSignUp');
+        }
       }}
     >
       <View style={styles.list}>
