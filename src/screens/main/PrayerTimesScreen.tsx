@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Card, IconChip, IOSToggle, SegmentedControl } from '../../components';
-import { colors, shadows } from '../../theme';
+import { lightColors, shadows, useTheme } from '../../theme';
 import { usePaywallGate } from '../../hooks/usePaywallGate';
 import { usePrayerSchedule } from '../../hooks/usePrayerSchedule';
 import { useSettingsStore, type CalcMethodKey } from '../../store/useSettingsStore';
@@ -26,19 +26,22 @@ const METHOD_KEY_MAP: Record<CalcMethodKey, string> = {
 
 /** Distinct goldDark mini icon per prayer (dawn arc, half-circles, discs, crescent). */
 function PrayerMiniIcon({ prayer }: { prayer: PrayerKey }) {
+  const { colors } = useTheme();
   switch (prayer) {
     case 'fajr':
-      return <View style={styles.iconFajr} />;
+      return <View style={[styles.iconFajr, { borderColor: colors.goldDark }]} />;
     case 'sunrise':
-      return <View style={styles.iconSunrise} />;
+      return <View style={[styles.iconSunrise, { borderColor: colors.goldDark }]} />;
     case 'dhuhr':
-      return <View style={styles.iconDhuhr} />;
+      return <View style={[styles.iconDhuhr, { backgroundColor: colors.goldDark }]} />;
     case 'asr':
-      return <View style={styles.iconAsr} />;
+      return (
+        <View style={[styles.iconAsr, { backgroundColor: colors.goldDark, shadowColor: colors.goldDark }]} />
+      );
     case 'maghrib':
-      return <View style={styles.iconMaghrib} />;
+      return <View style={[styles.iconMaghrib, { borderColor: colors.goldDark }]} />;
     case 'isha':
-      return <View style={styles.iconIsha} />;
+      return <View style={[styles.iconIsha, { borderColor: colors.goldDark }]} />;
   }
 }
 
@@ -48,6 +51,7 @@ export function PrayerTimesScreen() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const gate = usePaywallGate();
+  const { colors } = useTheme();
 
   const { now, today, next, locationLabel, dayFor } = usePrayerSchedule(30000);
   const calcMethod = useSettingsStore((s) => s.calcMethod);
@@ -67,7 +71,7 @@ export function PrayerTimesScreen() {
   };
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: colors.cream }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -85,10 +89,14 @@ export function PrayerTimesScreen() {
             onPress={() =>
               gate(() => navigation.navigate('LocationSetup', { fromSettings: true } as never))
             }
-            style={({ pressed }) => [styles.locationPill, pressed && { opacity: 0.8 }]}
+            style={({ pressed }) => [
+              styles.locationPill,
+              { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+              pressed && { opacity: 0.8 },
+            ]}
             hitSlop={6}
           >
-            <View style={styles.locationRing} />
+            <View style={[styles.locationRing, { borderColor: colors.emerald800 }]} />
             <AppText weight="semibold" size={13} color={colors.ink}>
               {locationLabel}
             </AppText>
@@ -122,7 +130,9 @@ export function PrayerTimesScreen() {
               return (
                 <View key={key} style={[styles.heroRow, shadows.heroCard]}>
                   <IconChip size={36} gold>
-                    <View style={styles.heroDot} />
+                    <View
+                      style={[styles.heroDot, { backgroundColor: colors.gold300, shadowColor: colors.gold300 }]}
+                    />
                   </IconChip>
                   <Pressable
                     style={{ flex: 1 }}
@@ -198,7 +208,7 @@ export function PrayerTimesScreen() {
         </View>
 
         {/* Night & duha strip */}
-        <View style={styles.extraStrip}>
+        <View style={[styles.extraStrip, { backgroundColor: colors.fill5 }]}>
           <View style={styles.extraCell}>
             <AppText size={11.5} color={colors.muted}>
               {t('prayers.midnight')}
@@ -207,7 +217,7 @@ export function PrayerTimesScreen() {
               {formatTime(day.midnight)}
             </AppText>
           </View>
-          <View style={styles.extraSeparator} />
+          <View style={[styles.extraSeparator, { backgroundColor: colors.fill10 }]} />
           <View style={styles.extraCell}>
             <AppText size={11.5} color={colors.muted}>
               {t('prayers.lastThird')}
@@ -216,7 +226,7 @@ export function PrayerTimesScreen() {
               {formatTime(day.lastThird)}
             </AppText>
           </View>
-          <View style={styles.extraSeparator} />
+          <View style={[styles.extraSeparator, { backgroundColor: colors.fill10 }]} />
           <View style={styles.extraCell}>
             <AppText size={11.5} color={colors.muted}>
               {t('prayers.duha')}
@@ -251,7 +261,6 @@ export function PrayerTimesScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
   },
   headerRow: {
     flexDirection: 'row',
@@ -263,9 +272,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
     borderRadius: 999,
     paddingVertical: 7,
     paddingHorizontal: 13,
@@ -275,14 +282,14 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: colors.emerald800,
   },
   rows: {
     marginTop: 14,
     gap: 10,
   },
   heroRow: {
-    backgroundColor: colors.emerald800,
+    // Next-prayer emerald hero row — design-dark in both schemes.
+    backgroundColor: lightColors.emerald800,
     borderRadius: 18,
     paddingVertical: 16,
     paddingHorizontal: 18,
@@ -294,8 +301,6 @@ const styles = StyleSheet.create({
     width: 11,
     height: 11,
     borderRadius: 5.5,
-    backgroundColor: colors.gold300,
-    shadowColor: colors.gold300,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 12,
@@ -315,7 +320,6 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     borderWidth: 1.5,
-    borderColor: colors.goldDark,
     borderTopColor: 'transparent',
     transform: [{ rotate: '45deg' }],
   },
@@ -323,7 +327,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 6,
     borderWidth: 1.5,
-    borderColor: colors.goldDark,
     borderBottomWidth: 0,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
@@ -332,14 +335,11 @@ const styles = StyleSheet.create({
     width: 11,
     height: 11,
     borderRadius: 5.5,
-    backgroundColor: colors.goldDark,
   },
   iconAsr: {
     width: 11,
     height: 11,
     borderRadius: 5.5,
-    backgroundColor: colors.goldDark,
-    shadowColor: colors.goldDark,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 6,
@@ -349,7 +349,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 6,
     borderWidth: 1.5,
-    borderColor: colors.goldDark,
     borderTopWidth: 0,
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
@@ -359,12 +358,10 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     borderWidth: 1.5,
-    borderColor: colors.goldDark,
     borderRightColor: 'transparent',
     transform: [{ rotate: '-45deg' }],
   },
   extraStrip: {
-    backgroundColor: colors.fill5,
     borderRadius: 16,
     paddingVertical: 13,
     paddingHorizontal: 18,
@@ -377,7 +374,6 @@ const styles = StyleSheet.create({
   },
   extraSeparator: {
     width: 1,
-    backgroundColor: colors.fill10,
   },
   footer: {
     marginTop: 12,

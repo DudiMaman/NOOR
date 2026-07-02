@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, Card, IconChip, ProgressBar, RadialGlow } from '../../components';
-import { colors, gradients, radii, shadows, spacing } from '../../theme';
+import { gradients, lightColors, radii, shadows, spacing, useTheme } from '../../theme';
 import { usePaywallGate } from '../../hooks/usePaywallGate';
 import { usePrayerSchedule } from '../../hooks/usePrayerSchedule';
 import { formatDualDate, remainingParts } from '../../services/dates';
@@ -24,6 +24,7 @@ export function HomeScreen() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const gate = usePaywallGate();
+  const { colors, scheme } = useTheme();
 
   const { now, today, next, locationLabel } = usePrayerSchedule(30000);
   const profile = useUserStore((s) => s.profile);
@@ -58,7 +59,7 @@ export function HomeScreen() {
 
   return (
     <ScrollView
-      style={styles.screen}
+      style={[styles.screen, { backgroundColor: colors.cream }]}
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
     >
@@ -88,7 +89,7 @@ export function HomeScreen() {
               }
               style={({ pressed }) => [styles.locationPill, pressed && styles.pressed]}
             >
-              <View style={styles.locationRing} />
+              <View style={[styles.locationRing, { borderColor: colors.gold300 }]} />
               <AppText weight="medium" size={13} color={colors.creamText}>
                 {locationLabel}
               </AppText>
@@ -97,8 +98,8 @@ export function HomeScreen() {
               onPress={() => gate(() => navigation.navigate('Reminders' as never))}
               style={({ pressed }) => [styles.bellCircle, pressed && styles.pressed]}
             >
-              <View style={styles.bellBody} />
-              <View style={styles.bellBadge} />
+              <View style={[styles.bellBody, { borderColor: colors.gold300 }]} />
+              <View style={[styles.bellBadge, { backgroundColor: colors.gold500 }]} />
             </Pressable>
           </View>
         </View>
@@ -132,7 +133,12 @@ export function HomeScreen() {
           </View>
           <View style={styles.arcWrap}>
             <View style={styles.arcCircle} />
-            <View style={[styles.sunDot, { left: sunLeft, top: sunTop }]} />
+            <View
+              style={[
+                styles.sunDot,
+                { left: sunLeft, top: sunTop, backgroundColor: colors.gold300, shadowColor: colors.gold300 },
+              ]}
+            />
           </View>
         </View>
 
@@ -144,7 +150,14 @@ export function HomeScreen() {
               <Pressable
                 key={key}
                 onPress={() => gate(() => navigation.navigate('PrayerTimes' as never))}
-                style={isNext ? styles.prayerCellNext : styles.prayerCellIdle}
+                style={
+                  isNext
+                    ? [
+                        styles.prayerCellNext,
+                        { backgroundColor: colors.goldTint20, borderColor: colors.goldBorder50 },
+                      ]
+                    : styles.prayerCellIdle
+                }
               >
                 <AppText
                   size={11.5}
@@ -184,7 +197,7 @@ export function HomeScreen() {
               colors={gradients.contextCard}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={styles.contextCard}
+              style={[styles.contextCard, { borderColor: colors.goldBorder45 }]}
             >
               <IconChip size={42} dark>
                 <AppText amiri size={20} color={colors.gold300}>
@@ -192,16 +205,17 @@ export function HomeScreen() {
                 </AppText>
               </IconChip>
               <View style={styles.cardMiddle}>
-                <AppText weight="bold" size={15.5} color={colors.ink}>
+                {/* Static light-gold gradient surface — keep light-palette ink in both schemes */}
+                <AppText weight="bold" size={15.5} color={lightColors.ink}>
                   {t('home.nowAdhkar', {
                     title: t(adhkarKind === 'morning' ? 'reader.morningAdhkar' : 'reader.eveningAdhkar'),
                   })}
                 </AppText>
-                <AppText size={12.5} color={colors.muted} style={styles.cardSub}>
+                <AppText size={12.5} color={lightColors.muted} style={styles.cardSub}>
                   {t('home.readNowSub', { minutes: 5 })}
                 </AppText>
               </View>
-              <View style={styles.startPill}>
+              <View style={[styles.startPill, { backgroundColor: colors.emerald800 }]}>
                 <AppText weight="semibold" size={13} color={colors.creamText}>
                   {t('home.startReading')}
                 </AppText>
@@ -216,9 +230,9 @@ export function HomeScreen() {
           style={styles.weeklyCard}
         >
           <IconChip size={42}>
-            <View style={styles.bookIcon}>
-              <View style={[styles.bookLine, styles.bookLineTop]} />
-              <View style={[styles.bookLine, styles.bookLineBottom]} />
+            <View style={[styles.bookIcon, { borderColor: colors.goldDark }]}>
+              <View style={[styles.bookLine, styles.bookLineTop, { backgroundColor: colors.goldDark }]} />
+              <View style={[styles.bookLine, styles.bookLineBottom, { backgroundColor: colors.goldDark }]} />
             </View>
           </IconChip>
           <View style={styles.cardMiddle}>
@@ -235,8 +249,17 @@ export function HomeScreen() {
               style={styles.weeklyProgress}
             />
           </View>
-          <View style={styles.outlinePill}>
-            <AppText weight="semibold" size={13} color={colors.emerald800}>
+          <View
+            style={[
+              styles.outlinePill,
+              scheme === 'dark' && { borderColor: 'rgba(240,235,224,0.25)' },
+            ]}
+          >
+            <AppText
+              weight="semibold"
+              size={13}
+              color={scheme === 'dark' ? colors.ink : colors.emerald800}
+            >
               {t('home.continueBtn')}
             </AppText>
           </View>
@@ -265,7 +288,7 @@ export function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.cream },
+  screen: { flex: 1 },
   scrollContent: { paddingBottom: 120 },
   pressed: { opacity: 0.7 },
   pressedSoft: { opacity: 0.9 },
@@ -295,7 +318,6 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderWidth: 1.5,
-    borderColor: colors.gold300,
     borderRadius: 4,
   },
   bellCircle: {
@@ -310,7 +332,6 @@ const styles = StyleSheet.create({
     width: 13,
     height: 13,
     borderWidth: 1.5,
-    borderColor: colors.gold300,
     borderTopLeftRadius: 6.5,
     borderTopRightRadius: 6.5,
     borderBottomLeftRadius: 5,
@@ -323,9 +344,9 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: colors.gold500,
     borderWidth: 1.5,
-    borderColor: colors.emerald800,
+    // Matches the static hero gradient — design-dark in both schemes.
+    borderColor: lightColors.emerald800,
   },
   dateLine: { marginTop: 14 },
   nextRow: {
@@ -352,8 +373,6 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: colors.gold300,
-    shadowColor: colors.gold300,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.9,
     shadowRadius: 18,
@@ -363,9 +382,7 @@ const styles = StyleSheet.create({
   prayerCellIdle: { alignItems: 'center', opacity: 0.55 },
   prayerCellNext: {
     alignItems: 'center',
-    backgroundColor: colors.goldTint20,
     borderWidth: 1,
-    borderColor: colors.goldBorder50,
     borderRadius: 12,
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -381,7 +398,6 @@ const styles = StyleSheet.create({
   contextCard: {
     borderRadius: radii.card,
     borderWidth: 1,
-    borderColor: colors.goldBorder45,
     paddingVertical: 15,
     paddingHorizontal: 18,
     flexDirection: 'row',
@@ -390,7 +406,6 @@ const styles = StyleSheet.create({
     ...shadows.selectedCard,
   },
   startPill: {
-    backgroundColor: colors.emerald800,
     borderRadius: radii.pill,
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -400,7 +415,6 @@ const styles = StyleSheet.create({
     width: 18,
     height: 22,
     borderWidth: 1.5,
-    borderColor: colors.goldDark,
     borderRadius: 3,
   },
   bookLine: {
@@ -408,7 +422,6 @@ const styles = StyleSheet.create({
     left: 3,
     right: 3,
     height: 1.5,
-    backgroundColor: colors.goldDark,
   },
   bookLineTop: { top: 4 },
   bookLineBottom: { top: 8 },
@@ -416,7 +429,8 @@ const styles = StyleSheet.create({
   weeklyProgress: { width: 150, marginTop: 8 },
   outlinePill: {
     borderWidth: 1.5,
-    borderColor: 'rgba(13,53,40,0.25)',
+    borderColor: 'rgba(13,53,40,0.25)', // light base — dark scheme overrides inline
+
     borderRadius: radii.pill,
     paddingVertical: 8,
     paddingHorizontal: 16,
