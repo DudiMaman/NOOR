@@ -1,20 +1,124 @@
+import 'react-native-gesture-handler';
+import React, { useEffect, useMemo, useState } from 'react';
+import { AppState } from 'react-native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as SplashScreenNative from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+import {
+  IBMPlexSansArabic_300Light,
+  IBMPlexSansArabic_400Regular,
+  IBMPlexSansArabic_500Medium,
+  IBMPlexSansArabic_600SemiBold,
+  IBMPlexSansArabic_700Bold,
+} from '@expo-google-fonts/ibm-plex-sans-arabic';
+import { Amiri_400Regular, Amiri_700Bold } from '@expo-google-fonts/amiri';
+import { useTranslation } from 'react-i18next';
 
-export default function App() {
+import { initI18n } from './src/i18n';
+import { RootNavigator } from './src/navigation/RootNavigator';
+import { LanguageSuggestionSheet } from './src/components';
+import { colors } from './src/theme';
+import { useSettingsStore } from './src/store/useSettingsStore';
+import { useSubscriptionStore } from './src/store/useSubscriptionStore';
+import { rescheduleAll } from './src/services/notifications';
+
+SplashScreenNative.preventAutoHideAsync().catch(() => {});
+
+const navTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.cream,
+    primary: colors.emerald800,
+    text: colors.ink,
+  },
+};
+
+/** Wait for zustand/AsyncStorage rehydration before rendering navigation. */
+function useStoresHydrated(): boolean {
+  const [hydrated, setHydrated] = useState(
+    () => useSettingsStore.persist.hasHydrated() && useSubscriptionStore.persist.hasHydrated()
+  );
+  useEffect(() => {
+    if (hydrated) return;
+    const check = () => {
+      if (useSettingsStore.persist.hasHydrated() && useSubscriptionStore.persist.hasHydrated()) {
+        setHydrated(true);
+      }
+    };
+    const unsub1 = useSettingsStore.persist.onFinishHydration(check);
+    const unsub2 = useSubscriptionStore.persist.onFinishHydration(check);
+    check();
+    return () => {
+      unsub1();
+      unsub2();
+    };
+  }, [hydrated]);
+  return hydrated;
+}
+
+function AppInner() {
+  const language = useSettingsStore((s) => s.language);
+  const location = useSettingsStore((s) => s.location);
+  const calcMethod = useSettingsStore((s) => s.calcMethod);
+  const madhhab = useSettingsStore((s) => s.madhhab);
+  const reminders = useSettingsStore((s) => s.reminders);
+  const trialEndsAt = useSubscriptionStore((s) => s.trialEndsAt);
+  const refreshSubscription = useSubscriptionStore((s) => s.refresh);
+
+  useMemo(() => initI18n(language), [language]);
+  const { t } = useTranslation();
+
+  // Keep the trial status fresh when the app returns to the foreground.
+  useEffect(() => {
+    refreshSubscription();
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') refreshSubscription();
+    });
+    return () => sub.remove();
+  }, [refreshSubscription]);
+
+  // Rebuild the local notification schedule whenever its inputs change.
+  useEffect(() => {
+    rescheduleAll({ t, location, calcMethod, madhhab, reminders, trialEndsAt }).catch(() => {});
+  }, [t, location, calcMethod, madhhab, reminders, trialEndsAt]);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer theme={navTheme}>
+      <StatusBar style="light" />
+      <RootNavigator />
+      <LanguageSuggestionSheet />
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  const [fontsLoaded] = useFonts({
+    IBMPlexSansArabic_300Light,
+    IBMPlexSansArabic_400Regular,
+    IBMPlexSansArabic_500Medium,
+    IBMPlexSansArabic_600SemiBold,
+    IBMPlexSansArabic_700Bold,
+    Amiri_400Regular,
+    Amiri_700Bold,
+  });
+  const hydrated = useStoresHydrated();
+  const ready = fontsLoaded && hydrated;
+
+  useEffect(() => {
+    if (ready) SplashScreenNative.hideAsync().catch(() => {});
+  }, [ready]);
+
+  if (!ready) return null;
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AppInner />
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}
