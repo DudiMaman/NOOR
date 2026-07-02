@@ -23,6 +23,10 @@ src/
 1. **Design fidelity** — implement each screen from its HTML reference slice (colors,
    sizes, spacing, radii and copy are final intent at 402×874pt). Use tokens from
    `src/theme` — never hard-code a color that exists as a token.
+   **Theming**: screens consume colors via `const { colors } = useTheme()`
+   (light/dark palettes share token names — see `theme/palettes.ts`). The static
+   `colors` export remains only for the design-dark screens (Splash, Onboarding,
+   TrialPaywall) that render identically in both schemes.
 2. **RTL** — the app forces RTL for Arabic (`I18nManager`). Write layouts in the same
    order as the HTML's RTL DOM: a `flexDirection:'row'` renders first-child on the
    right under RTL. Use `start`/`end` style properties (`marginStart`,
