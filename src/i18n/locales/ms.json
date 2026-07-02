@@ -237,7 +237,8 @@
     "surahList": "Surah-surah",
     "continueReading": "Teruskan membaca",
     "fontSize": "Saiz fon",
-    "surahTitle": "Surah {{name}}"
+    "surahTitle": "Surah {{name}}",
+    "searchPlaceholder": "Cari surah…"
   },
   "customs": {
     "title": "Acara dan Sunnah",

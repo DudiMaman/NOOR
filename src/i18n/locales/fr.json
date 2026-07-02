@@ -237,7 +237,8 @@
     "surahList": "Sourates",
     "continueReading": "Continuer la lecture",
     "fontSize": "Taille de la police",
-    "surahTitle": "Sourate {{name}}"
+    "surahTitle": "Sourate {{name}}",
+    "searchPlaceholder": "Rechercher une sourate…"
   },
   "customs": {
     "title": "Occasions et Sunnahs",

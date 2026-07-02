@@ -237,7 +237,8 @@
     "surahList": "Surah",
     "continueReading": "Lanjutkan membaca",
     "fontSize": "Ukuran font",
-    "surahTitle": "Surah {{name}}"
+    "surahTitle": "Surah {{name}}",
+    "searchPlaceholder": "Cari surah…"
   },
   "customs": {
     "title": "Momen Istimewa & Sunah",

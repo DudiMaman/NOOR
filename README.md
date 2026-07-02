@@ -26,11 +26,18 @@ The UI is a pixel-faithful implementation of the Claude Design handoff found in
   - Step-by-step prayer guides (all five prayers) with the complete recitations — a user
     can open the page and pray from it.
   - Rotating daily-hadith archive (27 items with warm Arabic explanations).
-  - Quran reader with Uthmani text (Al-Fātiḥah, Al-Kahf 1–20, Yā-Sīn 1–12, Al-Mulk 1–10,
-    the three Quls) with verse highlighting, bookmark, font scaling and a mock audio player.
+  - **The complete Quran** — all 114 surahs / 6,236 ayahs in Uthmani script (Hafs,
+    Tanzil text), with a virtualized reader (verse highlighting, bookmark, font
+    scaling), a searchable surah index, and **real streaming recitation**
+    (expo-audio; 4 reciters incl. Mishary Alafasy, seek + reciter switching).
 - **Live prayer engine** — offline calculation via [`adhan`](https://github.com/batoulapps/adhan-js)
   (7 calculation methods, Shafi/Hanafi madhhab), sunnah times (midnight, last third, duha),
-  hijri calendar conversion and upcoming Islamic occasions with countdowns.
+  **official Umm al-Qura hijri dates** (@umalqura/core, tabular fallback) and upcoming
+  Islamic occasions with countdowns.
+- **Dark mode** — a full dark palette derived from the design tokens; the appearance
+  switch (فاتح / داكن / تلقائي) applies live, with `auto` following the system scheme.
+- **Real local accounts** — registered users with salted SHA-256 password hashing
+  (expo-crypto), duplicate-email/wrong-password flows; guest mode; backend-swappable.
 - **Local notifications** — adhan per prayer, configurable pre-alerts (5/10/15 min), Friday
   sunnah, Monday/Thursday fasting, morning/evening adhkar, daily wird, trial-ending reminder.
 - **Language intelligence** — on first launch, if the device language differs from Arabic,
@@ -110,6 +117,15 @@ src/
   an entitlement. `usePaywallGate` wraps every interactive feature; the bottom tab bar
   gates all tabs except Home.
 
+## 🧪 Quality
+
+- `npx tsc --noEmit` — strict, zero errors.
+- `npm test` — 24 unit tests over the service layer (hijri anchors & round-trips,
+  prayer-time ordering/rollover/madhhab, currency formatting, occasions, dates).
+- `npx expo export` — release bundle verified.
+- Branded assets (app icon, adaptive icon, splash, favicon) generated from the
+  8-point-star motif; `eas.json` ships dev/preview/production build profiles.
+
 ## ✅ Implemented
 
 - All 19 design screens + auth, profile, language picker, surah list, adhkar reader and
@@ -127,18 +143,16 @@ src/
 
 ## 🔜 Next steps (post-handoff integration work)
 
-- **Payments**: connect StoreKit / Play Billing (or RevenueCat) to `useSubscriptionStore`;
-  replace the static FX table with store-provided localized prices; server receipt validation.
-- **Accounts**: real backend for auth (the current auth is a local mock) + sync of
-  personalization, progress and subscription state.
-- **Push notifications**: remote push (the permission/channel infrastructure is in place).
-- **Audio**: real recitation playback (expo-audio) behind the existing player UI.
-- **Full Quran**: bundle the complete 114-surah text (current build ships representative
-  surahs/excerpts as demo data) — the reader is data-driven and needs no code changes.
-- **Dark mode**: derive the dark palette from the tokens (the appearance switch already
-  persists the preference).
-- **Umm al-Qura exact dates**: swap the tabular hijri conversion for the official table
-  if day-exact official dates are required.
+- **Payments** (the one intentionally-open integration): connect StoreKit / Play
+  Billing (or RevenueCat) to `useSubscriptionStore`; replace the display-time FX
+  table with store-provided localized prices; server receipt validation.
+- **Backend sync**: the account system is local-first by design — plug a remote API
+  into `services/auth.ts` and sync personalization/progress/subscription state.
+- **Remote push sending**: devices already register Expo push tokens
+  (`services/pushToken.ts`); sending requires a backend that stores tokens and
+  calls the Expo push API (local scheduled notifications are fully working).
+- **Adhan audio in notifications**: bundle licensed muezzin recordings for the
+  selectable adhan voices (notifications currently use the system sound).
 
 ## 📐 Design source
 

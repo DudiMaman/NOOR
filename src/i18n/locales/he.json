@@ -237,7 +237,8 @@
     "surahList": "סורות",
     "continueReading": "המשך קריאה",
     "fontSize": "גודל גופן",
-    "surahTitle": "סורת {{name}}"
+    "surahTitle": "סורת {{name}}",
+    "searchPlaceholder": "חפש סורה…"
   },
   "customs": {
     "title": "הזדמנויות וסונות",

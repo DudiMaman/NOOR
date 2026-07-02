@@ -237,7 +237,8 @@
     "surahList": "苏拉",
     "continueReading": "继续阅读",
     "fontSize": "字体大小",
-    "surahTitle": "{{name}}章"
+    "surahTitle": "{{name}}章",
+    "searchPlaceholder": "搜索章节…"
   },
   "customs": {
     "title": "特殊时期与圣行",

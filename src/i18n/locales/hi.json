@@ -237,7 +237,8 @@
     "surahList": "सूरहें",
     "continueReading": "पढ़ना जारी रखें",
     "fontSize": "फ़ॉन्ट का आकार",
-    "surahTitle": "सूरह {{name}}"
+    "surahTitle": "सूरह {{name}}",
+    "searchPlaceholder": "सूरह खोजें…"
   },
   "customs": {
     "title": "मौक़े और सुन्नतें",

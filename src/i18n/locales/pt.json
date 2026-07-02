@@ -237,7 +237,8 @@
     "surahList": "Suras",
     "continueReading": "Continuar lendo",
     "fontSize": "Tamanho da fonte",
-    "surahTitle": "Surata {{name}}"
+    "surahTitle": "Surata {{name}}",
+    "searchPlaceholder": "Buscar uma surata…"
   },
   "customs": {
     "title": "Ocasiões & Sunnas",

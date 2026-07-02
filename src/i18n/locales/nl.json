@@ -237,7 +237,8 @@
     "surahList": "Soerah's",
     "continueReading": "Doorgaan met lezen",
     "fontSize": "Lettergrootte",
-    "surahTitle": "Soera {{name}}"
+    "surahTitle": "Soera {{name}}",
+    "searchPlaceholder": "Zoek een soera…"
   },
   "customs": {
     "title": "Gelegenheden & Sunna's",

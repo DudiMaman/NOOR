@@ -237,7 +237,8 @@
     "surahList": "সূরাসমূহ",
     "continueReading": "পাঠ চালিয়ে যান",
     "fontSize": "ফন্ট সাইজ",
-    "surahTitle": "সূরা {{name}}"
+    "surahTitle": "সূরা {{name}}",
+    "searchPlaceholder": "সূরা খুঁজুন…"
   },
   "customs": {
     "title": "বিশেষ দিন এবং সুন্নত",

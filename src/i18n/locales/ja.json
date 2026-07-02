@@ -237,7 +237,8 @@
     "surahList": "スーラ",
     "continueReading": "読み続ける",
     "fontSize": "フォントサイズ",
-    "surahTitle": "スーラ・{{name}}"
+    "surahTitle": "スーラ・{{name}}",
+    "searchPlaceholder": "スーラを検索…"
   },
   "customs": {
     "title": "イスラム暦の行事とスンナ",

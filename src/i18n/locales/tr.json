@@ -237,7 +237,8 @@
     "surahList": "Sureler",
     "continueReading": "Okumaya devam et",
     "fontSize": "Yazı boyutu",
-    "surahTitle": "{{name}} Suresi"
+    "surahTitle": "{{name}} Suresi",
+    "searchPlaceholder": "Sure ara…"
   },
   "customs": {
     "title": "Merasimler ve Sünneler",

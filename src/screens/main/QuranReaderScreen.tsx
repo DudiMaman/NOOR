@@ -1,17 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  FlatList,
+  I18nManager,
+  Pressable,
+  StyleSheet,
+  View,
+  type GestureResponderEvent,
+  type ListRenderItemInfo,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppText, ProgressBar, RadialGlow } from '../../components';
-import { colors, gradients, shadows } from '../../theme';
-import { QURAN, RECITERS, getSurah } from '../../content/quran';
+import { gradients, lightColors, shadows, useTheme } from '../../theme';
+import { QURAN, getSurah } from '../../content/quran';
+import type { Verse } from '../../content/types';
 import { useContentStore } from '../../store/useContentStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { usePaywallGate } from '../../hooks/usePaywallGate';
 import { dateKey } from '../../services/dates';
+import {
+  ensureAudioMode,
+  formatClock,
+  nextReciterId,
+  recitationUrl,
+  reciterName,
+} from '../../services/audio';
 
 const ARABIC_DIGITS = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
 
@@ -26,14 +43,22 @@ function toArabicDigits(n: number): string {
 const BISMILLAH = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
 
 /**
+ * Verses are rendered in chunks of ~12 so the full mushaf (Al-Baqarah: 286
+ * ayahs) stays scrollable without laying out one gigantic nested <Text>.
+ */
+const VERSES_PER_CHUNK = 12;
+
+/**
  * Quran reader tab (design ref 1s) — ornament surah header, justified
- * Amiri reading card with tappable verses + daily-ward chip, audio bar.
+ * Amiri reading card with tappable verses + daily-ward chip, audio bar
+ * streaming the selected reciter via expo-audio.
  */
 export function QuranReaderScreen() {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const gate = usePaywallGate();
+  const { colors } = useTheme();
 
   const bookmark = useContentStore((s) => s.bookmark);
   const setBookmark = useContentStore((s) => s.setBookmark);
@@ -42,6 +67,8 @@ export function QuranReaderScreen() {
   const wardDateKey = useContentStore((s) => s.wardDateKey);
   const quranFontScale = useSettingsStore((s) => s.quranFontScale);
   const cycleQuranFontScale = useSettingsStore((s) => s.cycleQuranFontScale);
+  const reciterId = useSettingsStore((s) => s.reciterId);
+  const setReciterId = useSettingsStore((s) => s.setReciterId);
 
   const surah = getSurah(bookmark.surahNumber) ?? QURAN[0];
   const bookmarkedHere = bookmark.surahNumber === surah.number;
@@ -56,20 +83,65 @@ export function QuranReaderScreen() {
     setCurrentVerse(bookmark.surahNumber === surah.number ? bookmark.verse : 1);
   }
 
-  const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0.44);
-  useEffect(() => {
-    if (!playing) return;
-    const id = setInterval(() => {
-      setProgress((p) => {
-        const next = Math.min(1, p + 0.004);
-        if (next >= 1) setPlaying(false);
-        return next;
-      });
-    }, 250);
-    return () => clearInterval(id);
-  }, [playing]);
+  // --- Recitation audio (expo-audio) ------------------------------------
+  const audioUrl = recitationUrl(surah.number, reciterId);
+  // Keep the hook's source stable — surah/reciter changes go through replace().
+  const initialUrlRef = useRef(audioUrl);
+  const player = useAudioPlayer({ uri: initialUrlRef.current });
+  const status = useAudioPlayerStatus(player);
 
+  useEffect(() => {
+    void ensureAudioMode();
+  }, []);
+
+  const loadedUrlRef = useRef(initialUrlRef.current);
+  useEffect(() => {
+    if (loadedUrlRef.current === audioUrl) return;
+    loadedUrlRef.current = audioUrl;
+    try {
+      // Pause first so the new stream loads in a reset, paused state.
+      player.pause();
+      player.replace({ uri: audioUrl });
+    } catch {
+      // Stream swap failed (e.g. offline) — keep the UI rendered.
+    }
+  }, [audioUrl, player]);
+
+  const currentTime = Number.isFinite(status.currentTime) ? status.currentTime : 0;
+  const duration =
+    status.isLoaded && Number.isFinite(status.duration) && status.duration > 0
+      ? status.duration
+      : 0;
+  const audioProgress = duration > 0 ? Math.min(1, currentTime / duration) : 0;
+  const currentLabel = status.isLoaded ? formatClock(currentTime) : '0:00';
+  const durationLabel = duration > 0 ? formatClock(duration) : '--:--';
+
+  const onTogglePlay = () =>
+    gate(() => {
+      try {
+        if (status.playing) player.pause();
+        else player.play();
+      } catch {
+        // Player not ready (e.g. stream error) — no-op.
+      }
+    });
+
+  const [barWidth, setBarWidth] = useState(0);
+  const onSeekPress = (event: GestureResponderEvent) => {
+    const x = event.nativeEvent.locationX;
+    gate(() => {
+      if (duration <= 0 || barWidth <= 0) return;
+      const raw = Math.min(1, Math.max(0, x / barWidth));
+      const fraction = I18nManager.isRTL ? 1 - raw : raw;
+      player.seekTo(fraction * duration).catch(() => {
+        // Seek on an unloaded stream — ignore.
+      });
+    });
+  };
+
+  const onCycleReciter = () => gate(() => setReciterId(nextReciterId(reciterId)));
+
+  // --- Reading card ------------------------------------------------------
   const wardRead = wardDateKey === dateKey() ? wardVersesRead : 0;
   const showBismillah = surah.number !== 1 && surah.number !== 9;
 
@@ -80,14 +152,70 @@ export function QuranReaderScreen() {
       addWardProgress(dateKey(), 1);
     });
 
+  const chunks = useMemo(() => {
+    const out: Verse[][] = [];
+    for (let i = 0; i < surah.verses.length; i += VERSES_PER_CHUNK) {
+      out.push(surah.verses.slice(i, i + VERSES_PER_CHUNK));
+    }
+    return out;
+  }, [surah]);
+
+  const listRef = useRef<FlatList<Verse[]>>(null);
+  useEffect(() => {
+    listRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [surah.number]);
+
+  const renderChunk = ({ item }: ListRenderItemInfo<Verse[]>) => (
+    <AppText style={styles.quranText}>
+      {item.map((verse) => (
+        <React.Fragment key={verse.number}>
+          <AppText
+            amiri
+            size={23 * quranFontScale}
+            lineHeight={54 * quranFontScale}
+            color={colors.inkQuran}
+            suppressHighlighting
+            onPress={() => onVersePress(verse.number)}
+            style={
+              verse.number === currentVerse
+                ? { backgroundColor: colors.goldTint16 }
+                : undefined
+            }
+          >
+            {verse.text}
+          </AppText>
+          <View
+            style={[
+              styles.verseMarker,
+              {
+                borderColor: colors.gold500,
+                width: 27 * quranFontScale,
+                height: 27 * quranFontScale,
+                borderRadius: 13.5 * quranFontScale,
+              },
+            ]}
+          >
+            <AppText amiri size={13 * quranFontScale} color={colors.goldDark}>
+              {toArabicDigits(verse.number)}
+            </AppText>
+          </View>
+        </React.Fragment>
+      ))}
+    </AppText>
+  );
+
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
+    <View style={[styles.screen, { backgroundColor: colors.cream, paddingTop: insets.top }]}>
       {/* Top bar */}
       <View style={styles.topBar}>
         <Pressable
           onPress={() => gate(() => navigation.navigate('SurahList' as never))}
           hitSlop={6}
-          style={({ pressed }) => [styles.circleBtn, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [
+            styles.circleBtn,
+            { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+            pressed && { opacity: 0.7 },
+          ]}
         >
           <AppText weight="bold" size={17} color={colors.emerald800}>
             ›
@@ -108,18 +236,23 @@ export function QuranReaderScreen() {
           hitSlop={6}
           style={({ pressed }) => [
             styles.circleBtn,
-            bookmarkedHere && styles.circleBtnBookmarked,
+            { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+            bookmarkedHere && { backgroundColor: colors.gold100, borderColor: colors.gold500 },
             pressed && { opacity: 0.7 },
           ]}
         >
-          <View style={styles.bookmarkShape}>
-            <View style={styles.bookmarkNotch} />
+          <View style={[styles.bookmarkShape, { borderColor: colors.emerald800 }]}>
+            <View style={[styles.bookmarkNotch, { borderTopColor: colors.emerald800 }]} />
           </View>
         </Pressable>
         <Pressable
           onPress={() => gate(() => cycleQuranFontScale())}
           hitSlop={6}
-          style={({ pressed }) => [styles.circleBtn, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [
+            styles.circleBtn,
+            { backgroundColor: colors.card, borderColor: colors.hairlineStrong },
+            pressed && { opacity: 0.7 },
+          ]}
         >
           <AppText weight="bold" size={12} color={colors.emerald800}>
             Aا
@@ -167,55 +300,31 @@ export function QuranReaderScreen() {
       </LinearGradient>
 
       {/* Reading card */}
-      <View style={styles.readingCard}>
-        <ScrollView
+      <View
+        style={[
+          styles.readingCard,
+          { backgroundColor: colors.card, borderColor: colors.hairline },
+        ]}
+      >
+        <FlatList
+          ref={listRef}
+          data={chunks}
+          renderItem={renderChunk}
+          keyExtractor={(chunk) => String(chunk[0]?.number ?? 0)}
+          extraData={[currentVerse, quranFontScale, colors]}
+          initialNumToRender={4}
+          windowSize={7}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.readingContent}
-        >
-          <AppText style={styles.quranText}>
-            {surah.verses.map((verse) => (
-              <React.Fragment key={verse.number}>
-                <AppText
-                  amiri
-                  size={23 * quranFontScale}
-                  lineHeight={54 * quranFontScale}
-                  color={colors.inkQuran}
-                  suppressHighlighting
-                  onPress={() => onVersePress(verse.number)}
-                  style={
-                    verse.number === currentVerse
-                      ? { backgroundColor: colors.goldTint16 }
-                      : undefined
-                  }
-                >
-                  {verse.text}
-                </AppText>
-                <View
-                  style={[
-                    styles.verseMarker,
-                    {
-                      width: 27 * quranFontScale,
-                      height: 27 * quranFontScale,
-                      borderRadius: 13.5 * quranFontScale,
-                    },
-                  ]}
-                >
-                  <AppText amiri size={13 * quranFontScale} color={colors.goldDark}>
-                    {toArabicDigits(verse.number)}
-                  </AppText>
-                </View>
-              </React.Fragment>
-            ))}
-          </AppText>
-        </ScrollView>
+        />
         <LinearGradient
-          colors={['rgba(255,255,255,0)', '#FFFFFF'] as const}
+          colors={[colors.card + '00', colors.card] as const}
           locations={[0, 0.85] as const}
           style={styles.fadeOverlay}
           pointerEvents="none"
         />
         <View style={styles.wardChipWrap} pointerEvents="none">
-          <View style={styles.wardChip}>
+          <View style={[styles.wardChip, { backgroundColor: colors.fill5 }]}>
             <AppText size={11.5} color={colors.faint}>
               {t('quran.dailyWard', { read: wardRead, total: surah.versesCount })}
             </AppText>
@@ -225,17 +334,14 @@ export function QuranReaderScreen() {
 
       {/* Audio bar */}
       <View style={[styles.audioBar, shadows.heroCard]}>
-        <Pressable
-          onPress={() => gate(() => setPlaying((p) => !p))}
-          style={({ pressed }) => pressed && { opacity: 0.85 }}
-        >
+        <Pressable onPress={onTogglePlay} style={({ pressed }) => pressed && { opacity: 0.85 }}>
           <LinearGradient
             colors={gradients.goldCta}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={[styles.playCircle, shadows.goldCta]}
           >
-            {playing ? (
+            {status.playing ? (
               <View style={styles.pauseRow}>
                 <View style={styles.pauseBar} />
                 <View style={styles.pauseBar} />
@@ -246,22 +352,37 @@ export function QuranReaderScreen() {
           </LinearGradient>
         </Pressable>
         <View style={{ flex: 1 }}>
-          <AppText weight="bold" size={14.5} color={colors.creamText}>
-            {t('quran.recitation', { reciter: RECITERS[0].name })}
-          </AppText>
+          <Pressable onPress={onCycleReciter} hitSlop={4}>
+            {({ pressed }) => (
+              <AppText
+                weight="bold"
+                size={14.5}
+                color={colors.creamText}
+                style={pressed && { opacity: 0.7 }}
+              >
+                {t('quran.recitation', { reciter: reciterName(reciterId) })}
+              </AppText>
+            )}
+          </Pressable>
           <View style={styles.progressRow}>
             <AppText size={10.5} color={colors.onDarkFaint} tabular>
-              2:41
+              {currentLabel}
             </AppText>
-            <ProgressBar
-              progress={progress}
-              height={4}
-              trackColor="rgba(245,238,220,0.15)"
-              fillColor={colors.gold500}
+            <Pressable
               style={{ flex: 1 }}
-            />
+              hitSlop={10}
+              onLayout={(e) => setBarWidth(e.nativeEvent.layout.width)}
+              onPress={onSeekPress}
+            >
+              <ProgressBar
+                progress={audioProgress}
+                height={4}
+                trackColor="rgba(245,238,220,0.15)"
+                fillColor={colors.gold500}
+              />
+            </Pressable>
             <AppText size={10.5} color={colors.onDarkFaint} tabular>
-              6:03
+              {durationLabel}
             </AppText>
           </View>
         </View>
@@ -278,14 +399,15 @@ export function QuranReaderScreen() {
   );
 }
 
+// Colors that adapt to the scheme are applied inline via useTheme().
+// The audio bar is a design-dark surface — it keeps its literal emerald/gold
+// values (lightColors) in both schemes, exactly like the ornament gradients.
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.cream,
   },
   verseMarker: {
     borderWidth: 1.2,
-    borderColor: colors.gold500,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 7,
@@ -303,16 +425,10 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairlineStrong,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-  },
-  circleBtnBookmarked: {
-    backgroundColor: colors.gold100,
-    borderColor: colors.gold500,
   },
   topCenter: {
     flex: 1,
@@ -322,7 +438,6 @@ const styles = StyleSheet.create({
     width: 11,
     height: 15,
     borderWidth: 1.5,
-    borderColor: colors.emerald800,
     borderBottomWidth: 0,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
@@ -338,7 +453,6 @@ const styles = StyleSheet.create({
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderTopWidth: 5,
-    borderTopColor: colors.emerald800,
   },
   ornament: {
     marginTop: 8,
@@ -374,9 +488,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 14,
     marginHorizontal: 20,
-    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: colors.hairline,
     borderRadius: 22,
     overflow: 'hidden',
   },
@@ -404,7 +516,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   wardChip: {
-    backgroundColor: colors.fill5,
     paddingVertical: 4,
     paddingHorizontal: 14,
     borderRadius: 999,
@@ -412,7 +523,7 @@ const styles = StyleSheet.create({
   audioBar: {
     marginTop: 12,
     marginHorizontal: 20,
-    backgroundColor: colors.emerald800,
+    backgroundColor: lightColors.emerald800,
     borderRadius: 24,
     paddingVertical: 14,
     paddingHorizontal: 18,
@@ -436,7 +547,7 @@ const styles = StyleSheet.create({
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     borderEndWidth: 13,
-    borderEndColor: colors.emerald800,
+    borderEndColor: lightColors.emerald800,
     marginStart: -3,
   },
   pauseRow: {
@@ -447,7 +558,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 16,
     borderRadius: 2,
-    backgroundColor: colors.emerald800,
+    backgroundColor: lightColors.emerald800,
   },
   progressRow: {
     flexDirection: 'row',
@@ -457,7 +568,7 @@ const styles = StyleSheet.create({
   },
   verseChip: {
     borderWidth: 1,
-    borderColor: colors.goldBorder50,
+    borderColor: lightColors.goldBorder50,
     borderRadius: 999,
     paddingVertical: 3,
     paddingHorizontal: 10,

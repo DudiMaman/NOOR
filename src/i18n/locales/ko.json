@@ -237,7 +237,8 @@
     "surahList": "수라 목록",
     "continueReading": "읽기 계속",
     "fontSize": "글씨 크기",
-    "surahTitle": "수라 {{name}}"
+    "surahTitle": "수라 {{name}}",
+    "searchPlaceholder": "수라 검색…"
   },
   "customs": {
     "title": "기념일과 순나",

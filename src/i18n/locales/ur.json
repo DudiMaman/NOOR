@@ -237,7 +237,8 @@
     "surahList": "سورتیں",
     "continueReading": "پڑھنا جاری رکھیں",
     "fontSize": "فونٹ سائز",
-    "surahTitle": "سورہ {{name}}"
+    "surahTitle": "سورہ {{name}}",
+    "searchPlaceholder": "سورہ تلاش کریں…"
   },
   "customs": {
     "title": "مناسبات اور سنتیں",

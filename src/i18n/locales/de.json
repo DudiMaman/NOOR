@@ -237,7 +237,8 @@
     "surahList": "Suren",
     "continueReading": "Weiterlesen",
     "fontSize": "Schriftgröße",
-    "surahTitle": "Sure {{name}}"
+    "surahTitle": "Sure {{name}}",
+    "searchPlaceholder": "Sure suchen…"
   },
   "customs": {
     "title": "Anlässe & Sunnas",

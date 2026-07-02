@@ -237,7 +237,8 @@
     "surahList": "Sura",
     "continueReading": "Endelea kusoma",
     "fontSize": "Ukubwa wa herufi",
-    "surahTitle": "Sura {{name}}"
+    "surahTitle": "Sura {{name}}",
+    "searchPlaceholder": "Tafuta sura…"
   },
   "customs": {
     "title": "Maadhimisho & Sunna",

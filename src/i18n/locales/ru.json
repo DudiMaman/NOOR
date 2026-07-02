@@ -237,7 +237,8 @@
     "surahList": "Суры",
     "continueReading": "Продолжить чтение",
     "fontSize": "Размер шрифта",
-    "surahTitle": "Сура {{name}}"
+    "surahTitle": "Сура {{name}}",
+    "searchPlaceholder": "Поиск суры…"
   },
   "customs": {
     "title": "Случаи и сунны",

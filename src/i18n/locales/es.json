@@ -237,7 +237,8 @@
     "surahList": "Azoras",
     "continueReading": "Continuar leyendo",
     "fontSize": "Tamaño de fuente",
-    "surahTitle": "Sura {{name}}"
+    "surahTitle": "Sura {{name}}",
+    "searchPlaceholder": "Buscar una sura…"
   },
   "customs": {
     "title": "Ocasiones y Sunnas",
